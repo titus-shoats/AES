@@ -76,7 +76,8 @@ private:
     const int incrementProxy = 5;
 
     bool isProxyEmpty;
-    bool  canProxyCounterIncrement;
+    bool canProxyCounterIncrement;
+    bool isStopStartThreadCounter;
 
 
 signals:
@@ -115,6 +116,10 @@ public slots:
     void getProxyFile(QString fileName);
 
     void receiverEmptyProxyServer(QString isEmpty);
+
+    void receiverStopThreadCounters(QString stopThreadCounter);
+    void receiverStartThreadCounters(QString startThreadCounter);
+
 
 
 };

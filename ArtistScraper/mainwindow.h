@@ -71,6 +71,9 @@ signals:
     void postParam(QString,QString,QList <QString> *);
     void emitParameters();
     void emitsenderEmptyProxyServer(QString);
+    void emitsenderStopThreadCounters(QString);
+    void emitsenderStartThreadCounters(QString);
+
 
 private:
     Ui::MainWindow *ui;

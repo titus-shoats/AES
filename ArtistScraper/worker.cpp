@@ -229,7 +229,7 @@ void Worker::doWork()
 
                        case 5: qDebug()  << "Curl code-> "<< result << " Message->" << curl->errbuf;
                             break;
-                       default: qDebug() << "Default Switch Statement Curl Code--> "result;
+                       default: qDebug() << "Default Switch Statement Curl Code--> " << result;
 
                     }
 
@@ -271,59 +271,65 @@ void Worker::getParam(QString url,QString userAgent,QList <QString> *proxyServer
 
 
 
-         // if workerCounter == incrementProxy, reset workerCounter ; if certain number of
-          // http request have been made rotate proxy
-          if(*workerCounterPtr == incrementProxy)
-          {
-              // only rotate each proxy if proxyCounterPtr is not greater than our proxyServer qlist
-              if( (*proxyServerCounterPtr) < proxyServers->size() )
-              {
-                        // if proxy counter is not greater than proxyServer qlist, proxyCounter can increment
-                        canProxyCounterIncrement =true;
-              }
+          // if workerCounter == incrementProxy, reset workerCounter ; if certain number of
+           // http request have been made rotate proxy
+           if(*workerCounterPtr <= incrementProxy)
+           {
+               // only rotate each proxy if proxyCounterPtr is not greater than our proxyServer qlist
+               if( (*proxyServerCounterPtr) <= proxyServers->size() )
+               {
+                         // if proxy counter is not greater than proxyServer qlist, proxyCounter can increment
+                         canProxyCounterIncrement =true;
+               }
 
-              // if proxy counter is equal to the size of proxyServer qlist, we cant increment
-              if( (*proxyServerCounterPtr) == proxyServers->size() )
-              {
-                        canProxyCounterIncrement = false;
-              }
-
-              // if proxies contained in qlist empty in main thread, if so clear the proxylist in this thread also
-
-              if(isProxyEmpty == true)
-              {
-                  proxyServers->clear();
-                  *proxies ="";
-              }
-
-              // if proxies contained in qlist are not empty, and we can keep incrementing,
-              // our proxies are good to use/rotate
-              if(isProxyEmpty == false && canProxyCounterIncrement == true)
-              {
-                  *proxies =  proxyServers->at(*proxyServerCounterPtr);
-
-              }
+               // if proxy counter is equal to the size of proxyServer qlist, we cant increment
+               if( (*proxyServerCounterPtr) == proxyServers->size() )
+               {
+                         canProxyCounterIncrement = false;
+                // if proxyServerCounter is equal to the size of the proxyServer qlist, reset it to 0
+                         *proxyServerCounterPtr = 0;
+               }
 
 
-             // qDebug() << *proxies;
+               // if proxies contained in qlist empty in main thread, if so clear the proxylist in this thread also
+               if(isProxyEmpty == true && proxyServers->size() == 0)
+               {
+                   //qDebug() << "Proxy Empty";
+                   //qDebug() << *proxyServers;
+                   //qDebug() <<proxyServers->size();
+                   proxyServers->clear();
+                   *proxies ="";
+               }
 
-              // certain number of http request have been made so start workerCounter over, set to 0
-              *workerCounterPtr =0;
+               // if proxies contained in qlist are not empty, and we can keep incrementing,
+               // our proxies are good to use/rotate
+               if(isProxyEmpty == false && canProxyCounterIncrement == true)
+               {
+                   *proxies =  proxyServers->at(*proxyServerCounterPtr);
+                   //qDebug() << "Counter-->" << *proxies;
 
-             qDebug() << "Counter-->" << *proxyServerCounterPtr;
-            // increment proxyServerPtr to go through each proxyServer index every interval
-             (*proxyServerCounterPtr)+=1;
-          }
+               }
+                //qDebug() << "Counter-->" << *proxyServerCounterPtr;
+                //qDebug() << "Proxies-->" << *proxies;
 
-          // if proxyServerCounter is equal to the size of the proxyServer qlist, reset it to 0
-          if(*proxyServerCounterPtr == proxyServers->size())
-          {
-             *proxyServerCounterPtr = 0;
-          }
+           }
 
 
-          // increment workerCounter if we have not hit our http request limit to rotate each proxy
-          *(workerCounterPtr)+=1;
+           // if workerCounter is greater than incrementProxy/ amount of http request before proxy rotates
+           if(*workerCounterPtr >= incrementProxy)
+           {
+               // restart workerCounter
+               *workerCounterPtr= 0;
+               // increment proxyServerPtr to go through each proxyServer index every interval
+               (*proxyServerCounterPtr)+=1;
+
+           }
+
+           // increment workerCounter if we have not hit our http request limit to rotate each proxy
+           (*workerCounterPtr)+=1;
+
+
+
 
 
 }
@@ -344,5 +350,24 @@ void Worker::receiverEmptyProxyServer(QString isEmpty)
     if(isEmpty== "Not Empty")
     {
           isProxyEmpty = false;
+
     }
+}
+
+void Worker::receiverStopThreadCounters(QString stopThreadCounter)
+{
+    isStopStartThreadCounter = false;
+    *workerCounterPtr =0;
+    *proxyServerCounterPtr =0;
+}
+
+void Worker::receiverStartThreadCounters(QString startThreadCounter)
+{
+
+    isStopStartThreadCounter = true;
+    *workerCounterPtr =0;
+    *proxyServerCounterPtr =0;
+
+
+
 }

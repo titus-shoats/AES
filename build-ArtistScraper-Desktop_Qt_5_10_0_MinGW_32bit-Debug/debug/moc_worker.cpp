@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_Worker_t {
-    QByteArrayData data[19];
-    char stringdata0[210];
+    QByteArrayData data[23];
+    char stringdata0[302];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -50,7 +50,11 @@ QT_MOC_LITERAL(14, 142, 12), // "proxyServers"
 QT_MOC_LITERAL(15, 155, 12), // "getProxyFile"
 QT_MOC_LITERAL(16, 168, 8), // "fileName"
 QT_MOC_LITERAL(17, 177, 24), // "receiverEmptyProxyServer"
-QT_MOC_LITERAL(18, 202, 7) // "isEmpty"
+QT_MOC_LITERAL(18, 202, 7), // "isEmpty"
+QT_MOC_LITERAL(19, 210, 26), // "receiverStopThreadCounters"
+QT_MOC_LITERAL(20, 237, 17), // "stopThreadCounter"
+QT_MOC_LITERAL(21, 255, 27), // "receiverStartThreadCounters"
+QT_MOC_LITERAL(22, 283, 18) // "startThreadCounter"
 
     },
     "Worker\0workRequested\0\0valueChanged\0"
@@ -58,7 +62,10 @@ QT_MOC_LITERAL(18, 202, 7) // "isEmpty"
     "emitEmailList\0emitKeywordQueue\0doWork\0"
     "getParam\0url\0userAgent\0QList<QString>*\0"
     "proxyServers\0getProxyFile\0fileName\0"
-    "receiverEmptyProxyServer\0isEmpty"
+    "receiverEmptyProxyServer\0isEmpty\0"
+    "receiverStopThreadCounters\0stopThreadCounter\0"
+    "receiverStartThreadCounters\0"
+    "startThreadCounter"
 };
 #undef QT_MOC_LITERAL
 
@@ -68,7 +75,7 @@ static const uint qt_meta_data_Worker[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      10,   14, // methods
+      12,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -76,18 +83,20 @@ static const uint qt_meta_data_Worker[] = {
        6,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   64,    2, 0x06 /* Public */,
-       3,    1,   65,    2, 0x06 /* Public */,
-       5,    0,   68,    2, 0x06 /* Public */,
-       6,    0,   69,    2, 0x06 /* Public */,
-       7,    1,   70,    2, 0x06 /* Public */,
-       8,    0,   73,    2, 0x06 /* Public */,
+       1,    0,   74,    2, 0x06 /* Public */,
+       3,    1,   75,    2, 0x06 /* Public */,
+       5,    0,   78,    2, 0x06 /* Public */,
+       6,    0,   79,    2, 0x06 /* Public */,
+       7,    1,   80,    2, 0x06 /* Public */,
+       8,    0,   83,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       9,    0,   74,    2, 0x0a /* Public */,
-      10,    3,   75,    2, 0x0a /* Public */,
-      15,    1,   82,    2, 0x0a /* Public */,
-      17,    1,   85,    2, 0x0a /* Public */,
+       9,    0,   84,    2, 0x0a /* Public */,
+      10,    3,   85,    2, 0x0a /* Public */,
+      15,    1,   92,    2, 0x0a /* Public */,
+      17,    1,   95,    2, 0x0a /* Public */,
+      19,    1,   98,    2, 0x0a /* Public */,
+      21,    1,  101,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
@@ -102,6 +111,8 @@ static const uint qt_meta_data_Worker[] = {
     QMetaType::Void, QMetaType::QString, QMetaType::QString, 0x80000000 | 13,   11,   12,   14,
     QMetaType::Void, QMetaType::QString,   16,
     QMetaType::Void, QMetaType::QString,   18,
+    QMetaType::Void, QMetaType::QString,   20,
+    QMetaType::Void, QMetaType::QString,   22,
 
        0        // eod
 };
@@ -122,6 +133,8 @@ void Worker::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 7: _t->getParam((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2])),(*reinterpret_cast< QList<QString>*(*)>(_a[3]))); break;
         case 8: _t->getProxyFile((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 9: _t->receiverEmptyProxyServer((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 10: _t->receiverStopThreadCounters((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 11: _t->receiverStartThreadCounters((*reinterpret_cast< QString(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -196,13 +209,13 @@ int Worker::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 10)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 12;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 10)
+        if (_id < 12)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 10;
+        _id -= 12;
     }
     return _id;
 }

@@ -59,6 +59,9 @@ MainWindow::MainWindow(QWidget *parent) :
      connect(this,SIGNAL(postParam(QString,QString,QList <QString> *)),worker,SLOT(getParam(QString,QString,QList <QString> *)));
      connect(worker,SIGNAL(emitEmailList(QString)),this,SLOT(receiverEmailList(QString)));
      connect(this,SIGNAL(emitsenderEmptyProxyServer(QString)),worker,SLOT(receiverEmptyProxyServer(QString)));
+     connect(this,SIGNAL(emitsenderStopThreadCounters(QString)),worker,SLOT(receiverStopThreadCounters(QString)));
+     connect(this,SIGNAL(emitsenderStartThreadCounters(QString)),worker,SLOT(receiverStartThreadCounters(QString)));
+
      //connect(this,SIGNAL(senderOpenProxyFlile(QString)),worker,SLOT(getProxyFile(QString)));
      // delete selected proxy row
 
@@ -413,6 +416,8 @@ void MainWindow::on_pushButton_Start_clicked(bool checked)
             thread->wait(); // If the thread is not running, this will immediately return.
 
             worker->requestWork();
+            emit emitsenderStartThreadCounters("Start");
+
 
         }
 
@@ -422,13 +427,13 @@ void MainWindow::on_pushButton_Start_clicked(bool checked)
 
     if(!checked){
 
-       // timer->stop();
-
-        //emailTableTimer->stop();
 
         worker->abort();
 
         thread->quit();
+
+        emit emitsenderStopThreadCounters("Stop");
+
 
 
 
@@ -444,15 +449,6 @@ void MainWindow::on_pushButton_Start_clicked(bool checked)
 
         *keywordListNumPtrCounter = 0;
         *keywordBoxNumPtrCounter =0;
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2000,14 +1996,14 @@ void MainWindow::receiverParameters()
            if(proxyServers->isEmpty())
            {
               emit emitsenderEmptyProxyServer("Empty");
-               qDebug() << "Main thread Empty??"<< *proxyServers;
+              // qDebug() << "Main thread Empty??"<< *proxyServers;
 
            }
 
            if(!proxyServers->isEmpty())
            {
               emit emitsenderEmptyProxyServer("Not Empty");
-              qDebug() << "Main thread not empty??"<< *proxyServers;
+             // qDebug() << "Main thread not empty??"<< *proxyServers;
            }
 
            // sending params/options signal after we done
