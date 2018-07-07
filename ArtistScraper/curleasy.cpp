@@ -7,10 +7,13 @@ CurlEasy::CurlEasy(QObject *parent)
     handle_ = curl_easy_init();
     Q_ASSERT(handle_ != nullptr);
 
+    errbuf[0] =0;
     set(CURLOPT_PRIVATE, this);
     set(CURLOPT_XFERINFOFUNCTION, staticCurlXferInfoFunction);
     set(CURLOPT_XFERINFODATA, this);
     set(CURLOPT_NOPROGRESS, long(0));
+    set(CURLOPT_ERRORBUFFER,errbuf);
+
 }
 
 CurlEasy::~CurlEasy()

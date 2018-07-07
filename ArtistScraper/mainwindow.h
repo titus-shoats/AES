@@ -70,6 +70,7 @@ public slots:
 signals:
     void postParam(QString,QString,QList <QString> *);
     void emitParameters();
+    void emitsenderEmptyProxyServer(QString);
 
 private:
     Ui::MainWindow *ui;

@@ -13,6 +13,8 @@ class CurlEasy : public QObject
 {
     Q_OBJECT
 public:
+    char errbuf[CURL_ERROR_SIZE];
+
     using DataFunction = std::function<size_t(char *buffer, size_t size)>;
     using SeekFunction = std::function<int(qint64 offset, int origin)>;
 
@@ -84,6 +86,7 @@ protected:
     struct curl_slist*          curlHttpHeaders_ = nullptr;
 
     friend class CurlMulti;
+
 };
 
 template<typename T> T CurlEasy::get(CURLINFO info)

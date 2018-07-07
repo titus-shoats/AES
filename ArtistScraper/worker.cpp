@@ -119,18 +119,22 @@ void Worker::doWork()
 
             std::string url = urlQueryParam->toStdString();
             //std::string userAgent = paramsPtr->at(1).toStdString();
+            std::string proxy =proxies->toStdString();
 
 
             CurlEasy *curl = new CurlEasy;
             curl->set(CURLOPT_URL, url.c_str());
+            if(!proxies->isEmpty()){
+                curl->set(CURLOPT_PROXY,proxy.c_str());
+            }
+            if(proxies->isEmpty()){
+                curl->set(CURLOPT_PROXY,NULL);
+            }
             curl->set(CURLOPT_FOLLOWLOCATION, 1L); // Tells libcurl to follow HTTP 3xx redirects
             curl->set(CURLOPT_SSL_VERIFYPEER,FALSE);
-
             curl->perform();
 
-
             curl->setWriteFunction([this](char *data, size_t size)->size_t {
-
 
 
                 //If response is not 200, obviously we wont get any emails,
@@ -153,6 +157,7 @@ void Worker::doWork()
                 QList<QString> list;
                 QString emailList;
                 int num = 0;
+
 
                 while (i.hasNext()) {
                     QRegularExpressionMatch match = i.next();
@@ -187,13 +192,47 @@ void Worker::doWork()
                 if(httpResponseCode == 200 && result ==CURLE_OK){
 
                    //qDebug() << "GOOD TO SCRAPE";
-                }else{
-                    qDebug() << "Error HTTP CODE--->" <<  httpResponseCode;
                 }
 
+                if(httpResponseCode == 503){
+
+                   qDebug() << "503 ERROR CODE ";
+
+                }
+
+
+                // BELOW IF CONDITION DOESNT MAKE SENSE -- REDO IT
                 if(result != result){
                     qDebug() << "CURLcode is NOT OK :: result is--->" << result;
                     qDebug() << "CURLcode is NOT OK :: HTTP CODE--->" << httpResponseCode;
+                }
+
+
+                if(result != CURLE_OK) {
+//                  size_t len = strlen(errbuf);
+//                  fprintf(stderr, "\nlibcurl: (%d) ", res);
+//                  if(len)
+//                    fprintf(stderr, "%s%s", errbuf,
+//                            ((errbuf[len - 1] != '\n') ? "\n" : ""));
+//                  else
+//                    fprintf(stderr, "%s\n", curl_easy_strerror(res));
+                   // qDebug() << "BUFFER ERROR---->"<< curl->errbuf;
+
+
+                    switch(result){
+                        case 7: qDebug()  << "Curl code-> "<< result << " Message->" << curl->errbuf;
+                           break;
+                       case 35: qDebug() <<  "Curl code-> " <<result << " Message->" << curl->errbuf;
+                            break;
+                       case 56: qDebug()  << "Curl code-> "<< result << " Message->" << curl->errbuf;
+                            break;
+
+                       case 5: qDebug()  << "Curl code-> "<< result << " Message->" << curl->errbuf;
+                            break;
+                       default: qDebug() << "Default Switch Statement Curl Code--> "result;
+
+                    }
+
                 }
 
             }); // end curl connect
@@ -229,70 +268,81 @@ void Worker::doWork()
 void Worker::getParam(QString url,QString userAgent,QList <QString> *proxyServers)
 {
     *urlQueryParam = url;
-    for(int j =0; j <proxyServers->size(); j++)
-    {
-        *proxies = proxyServers->at(0);
-    }
 
 
-          if(*workerCounterPtr <=  5)
-           {
 
-                // qDebug() << *workerCounterPtr;
-
-                (*proxyServerCounterPtr)+=1;
-                // increment proxyServer index
-
-                if(!proxyServers->isEmpty())
-                {
-                        if( (*proxyServerCounterPtr) <= proxyServers->size() )
-                        {
-                           // qDebug() << proxyServers->at(*proxyServerCounterPtr);
-
-                        }
-
-                        if(*proxyServerCounterPtr == proxyServers->size())
-                        {
-                           *proxyServerCounterPtr = 0;
-                        }
-                }// end of checking proxyServer is empty
-
-           }
-          if(*workerCounterPtr == 5)
+         // if workerCounter == incrementProxy, reset workerCounter ; if certain number of
+          // http request have been made rotate proxy
+          if(*workerCounterPtr == incrementProxy)
           {
+              // only rotate each proxy if proxyCounterPtr is not greater than our proxyServer qlist
               if( (*proxyServerCounterPtr) < proxyServers->size() )
               {
-                   //qDebug() << proxyServers->at(*proxyServerCounterPtr);
-                   qDebug() << "Counter has reset and proxy couter is---> "  << proxyServerCounterPtr;
+                        // if proxy counter is not greater than proxyServer qlist, proxyCounter can increment
+                        canProxyCounterIncrement =true;
+              }
+
+              // if proxy counter is equal to the size of proxyServer qlist, we cant increment
+              if( (*proxyServerCounterPtr) == proxyServers->size() )
+              {
+                        canProxyCounterIncrement = false;
+              }
+
+              // if proxies contained in qlist empty in main thread, if so clear the proxylist in this thread also
+
+              if(isProxyEmpty == true)
+              {
+                  proxyServers->clear();
+                  *proxies ="";
+              }
+
+              // if proxies contained in qlist are not empty, and we can keep incrementing,
+              // our proxies are good to use/rotate
+              if(isProxyEmpty == false && canProxyCounterIncrement == true)
+              {
+                  *proxies =  proxyServers->at(*proxyServerCounterPtr);
 
               }
 
 
-              // if workerCounter == 30, reset workerCounter
+             // qDebug() << *proxies;
+
+              // certain number of http request have been made so start workerCounter over, set to 0
               *workerCounterPtr =0;
 
-              // increment proxyServerPtr to go through each proxy index every interval
-              (*proxyServerCounterPtr)+=1;
-
+             qDebug() << "Counter-->" << *proxyServerCounterPtr;
+            // increment proxyServerPtr to go through each proxyServer index every interval
+             (*proxyServerCounterPtr)+=1;
           }
 
+          // if proxyServerCounter is equal to the size of the proxyServer qlist, reset it to 0
           if(*proxyServerCounterPtr == proxyServers->size())
           {
              *proxyServerCounterPtr = 0;
           }
-          // increment workerCounter
+
+
+          // increment workerCounter if we have not hit our http request limit to rotate each proxy
           *(workerCounterPtr)+=1;
 
-
-
-   // *workerCounter =12;
-
-    //for(int i= 0; i <)
-    //qDebug() << *workerCounter;
 
 }
 
 void Worker::getProxyFile(QString fileName)
 {
     //qDebug() << "Received proxy file name" << fileName ;
+}
+
+void Worker::receiverEmptyProxyServer(QString isEmpty)
+{
+    if(isEmpty == "Empty")
+    {
+
+         isProxyEmpty = true;
+    }
+
+    if(isEmpty== "Not Empty")
+    {
+          isProxyEmpty = false;
+    }
 }

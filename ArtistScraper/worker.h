@@ -27,6 +27,7 @@
 #include <cstdio>
 #include <string>
 
+
 class Worker : public QObject
 {
     Q_OBJECT
@@ -71,6 +72,13 @@ private:
     int *proxyServerCounterPtr;
     int proxyServerCounterNum;
 
+    // increment proxy at cetain number of http request
+    const int incrementProxy = 5;
+
+    bool isProxyEmpty;
+    bool  canProxyCounterIncrement;
+
+
 signals:
     /**
      * @brief This signal is emitted when the Worker request to Work
@@ -105,6 +113,8 @@ public slots:
     void getParam(QString url,QString userAgent,QList <QString> *proxyServers);
 
     void getProxyFile(QString fileName);
+
+    void receiverEmptyProxyServer(QString isEmpty);
 
 
 };

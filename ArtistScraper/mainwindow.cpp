@@ -58,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
      connect(worker,SIGNAL(emitParameters()),this,SLOT(receiverParameters()));
      connect(this,SIGNAL(postParam(QString,QString,QList <QString> *)),worker,SLOT(getParam(QString,QString,QList <QString> *)));
      connect(worker,SIGNAL(emitEmailList(QString)),this,SLOT(receiverEmailList(QString)));
+     connect(this,SIGNAL(emitsenderEmptyProxyServer(QString)),worker,SLOT(receiverEmptyProxyServer(QString)));
      //connect(this,SIGNAL(senderOpenProxyFlile(QString)),worker,SLOT(getProxyFile(QString)));
      // delete selected proxy row
 
@@ -1992,6 +1993,22 @@ void MainWindow::receiverParameters()
             }
 
             /********End of All Scraping Code******/
+
+
+           // if proxy server is empty emit a signal to let worker thread know
+           // if there are no proxies, use users regular ip
+           if(proxyServers->isEmpty())
+           {
+              emit emitsenderEmptyProxyServer("Empty");
+               qDebug() << "Main thread Empty??"<< *proxyServers;
+
+           }
+
+           if(!proxyServers->isEmpty())
+           {
+              emit emitsenderEmptyProxyServer("Not Empty");
+              qDebug() << "Main thread not empty??"<< *proxyServers;
+           }
 
            // sending params/options signal after we done
            emit postParam(searchEngineParam,options[5]->userAgentsOptions[0],proxyServers);
