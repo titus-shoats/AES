@@ -68,7 +68,7 @@ public slots:
 
 
 signals:
-    void postParam(QString,QString);
+    void postParam(QString,QString,QList <QString> *);
     void emitParameters();
 
 private:

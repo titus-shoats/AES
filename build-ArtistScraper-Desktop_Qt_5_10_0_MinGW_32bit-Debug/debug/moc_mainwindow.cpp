@@ -9,6 +9,7 @@
 #include "../../ArtistScraper/mainwindow.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
+#include <QtCore/QList>
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'mainwindow.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
@@ -21,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[20];
-    char stringdata0[345];
+    QByteArrayData data[21];
+    char stringdata0[361];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -34,28 +35,29 @@ static const qt_meta_stringdata_MainWindow_t qt_meta_stringdata_MainWindow = {
 QT_MOC_LITERAL(0, 0, 10), // "MainWindow"
 QT_MOC_LITERAL(1, 11, 9), // "postParam"
 QT_MOC_LITERAL(2, 21, 0), // ""
-QT_MOC_LITERAL(3, 22, 14), // "emitParameters"
-QT_MOC_LITERAL(4, 37, 27), // "on_pushButton_Start_clicked"
-QT_MOC_LITERAL(5, 65, 7), // "checked"
-QT_MOC_LITERAL(6, 73, 39), // "on_pushButton_Load_Keyword_Li..."
-QT_MOC_LITERAL(7, 113, 11), // "eventFilter"
-QT_MOC_LITERAL(8, 125, 7), // "watched"
-QT_MOC_LITERAL(9, 133, 7), // "QEvent*"
-QT_MOC_LITERAL(10, 141, 5), // "event"
-QT_MOC_LITERAL(11, 147, 15), // "mousePressEvent"
-QT_MOC_LITERAL(12, 163, 12), // "QMouseEvent*"
-QT_MOC_LITERAL(13, 176, 31), // "on_pushButton_Add_Proxy_clicked"
-QT_MOC_LITERAL(14, 208, 34), // "on_pushButton_Load_Proxies_cl..."
-QT_MOC_LITERAL(15, 243, 17), // "receiverEmailList"
-QT_MOC_LITERAL(16, 261, 18), // "receiverParameters"
-QT_MOC_LITERAL(17, 280, 27), // "recieverProxyTableSelection"
-QT_MOC_LITERAL(18, 308, 14), // "QItemSelection"
-QT_MOC_LITERAL(19, 323, 21) // "recieverKeywordsQueue"
+QT_MOC_LITERAL(3, 22, 15), // "QList<QString>*"
+QT_MOC_LITERAL(4, 38, 14), // "emitParameters"
+QT_MOC_LITERAL(5, 53, 27), // "on_pushButton_Start_clicked"
+QT_MOC_LITERAL(6, 81, 7), // "checked"
+QT_MOC_LITERAL(7, 89, 39), // "on_pushButton_Load_Keyword_Li..."
+QT_MOC_LITERAL(8, 129, 11), // "eventFilter"
+QT_MOC_LITERAL(9, 141, 7), // "watched"
+QT_MOC_LITERAL(10, 149, 7), // "QEvent*"
+QT_MOC_LITERAL(11, 157, 5), // "event"
+QT_MOC_LITERAL(12, 163, 15), // "mousePressEvent"
+QT_MOC_LITERAL(13, 179, 12), // "QMouseEvent*"
+QT_MOC_LITERAL(14, 192, 31), // "on_pushButton_Add_Proxy_clicked"
+QT_MOC_LITERAL(15, 224, 34), // "on_pushButton_Load_Proxies_cl..."
+QT_MOC_LITERAL(16, 259, 17), // "receiverEmailList"
+QT_MOC_LITERAL(17, 277, 18), // "receiverParameters"
+QT_MOC_LITERAL(18, 296, 27), // "recieverProxyTableSelection"
+QT_MOC_LITERAL(19, 324, 14), // "QItemSelection"
+QT_MOC_LITERAL(20, 339, 21) // "recieverKeywordsQueue"
 
     },
-    "MainWindow\0postParam\0\0emitParameters\0"
-    "on_pushButton_Start_clicked\0checked\0"
-    "on_pushButton_Load_Keyword_List_clicked\0"
+    "MainWindow\0postParam\0\0QList<QString>*\0"
+    "emitParameters\0on_pushButton_Start_clicked\0"
+    "checked\0on_pushButton_Load_Keyword_List_clicked\0"
     "eventFilter\0watched\0QEvent*\0event\0"
     "mousePressEvent\0QMouseEvent*\0"
     "on_pushButton_Add_Proxy_clicked\0"
@@ -80,35 +82,35 @@ static const uint qt_meta_data_MainWindow[] = {
        2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    2,   74,    2, 0x06 /* Public */,
-       3,    0,   79,    2, 0x06 /* Public */,
+       1,    3,   74,    2, 0x06 /* Public */,
+       4,    0,   81,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       4,    1,   80,    2, 0x08 /* Private */,
-       6,    0,   83,    2, 0x08 /* Private */,
-       7,    2,   84,    2, 0x08 /* Private */,
-      11,    1,   89,    2, 0x08 /* Private */,
-      13,    0,   92,    2, 0x08 /* Private */,
-      14,    0,   93,    2, 0x08 /* Private */,
-      15,    1,   94,    2, 0x0a /* Public */,
-      16,    0,   97,    2, 0x0a /* Public */,
-      17,    2,   98,    2, 0x0a /* Public */,
-      19,    0,  103,    2, 0x0a /* Public */,
+       5,    1,   82,    2, 0x08 /* Private */,
+       7,    0,   85,    2, 0x08 /* Private */,
+       8,    2,   86,    2, 0x08 /* Private */,
+      12,    1,   91,    2, 0x08 /* Private */,
+      14,    0,   94,    2, 0x08 /* Private */,
+      15,    0,   95,    2, 0x08 /* Private */,
+      16,    1,   96,    2, 0x0a /* Public */,
+      17,    0,   99,    2, 0x0a /* Public */,
+      18,    2,  100,    2, 0x0a /* Public */,
+      20,    0,  105,    2, 0x0a /* Public */,
 
  // signals: parameters
-    QMetaType::Void, QMetaType::QString, QMetaType::QString,    2,    2,
+    QMetaType::Void, QMetaType::QString, QMetaType::QString, 0x80000000 | 3,    2,    2,    2,
     QMetaType::Void,
 
  // slots: parameters
-    QMetaType::Void, QMetaType::Bool,    5,
+    QMetaType::Void, QMetaType::Bool,    6,
     QMetaType::Void,
-    QMetaType::Bool, QMetaType::QObjectStar, 0x80000000 | 9,    8,   10,
-    QMetaType::Void, 0x80000000 | 12,   10,
+    QMetaType::Bool, QMetaType::QObjectStar, 0x80000000 | 10,    9,   11,
+    QMetaType::Void, 0x80000000 | 13,   11,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, QMetaType::QString,    2,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 18, 0x80000000 | 18,    2,    2,
+    QMetaType::Void, 0x80000000 | 19, 0x80000000 | 19,    2,    2,
     QMetaType::Void,
 
        0        // eod
@@ -120,7 +122,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         MainWindow *_t = static_cast<MainWindow *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->postParam((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 0: _t->postParam((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2])),(*reinterpret_cast< QList<QString>*(*)>(_a[3]))); break;
         case 1: _t->emitParameters(); break;
         case 2: _t->on_pushButton_Start_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 3: _t->on_pushButton_Load_Keyword_List_clicked(); break;
@@ -150,7 +152,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         {
-            typedef void (MainWindow::*_t)(QString , QString );
+            typedef void (MainWindow::*_t)(QString , QString , QList<QString> * );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&MainWindow::postParam)) {
                 *result = 0;
                 return;
@@ -203,9 +205,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void MainWindow::postParam(QString _t1, QString _t2)
+void MainWindow::postParam(QString _t1, QString _t2, QList<QString> * _t3)
 {
-    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)), const_cast<void*>(reinterpret_cast<const void*>(&_t3)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 

@@ -37,9 +37,14 @@ Worker::Worker(QObject *parent) :
     _working =false;
     _abort = false;
     params = "";
-   // paramsPtr = &params;
-    paramsPtr = new  QList <QString>();
+    paramsPtr = new QList <QString>();
     urlQueryParam = new QString();
+    proxies = new QString();
+    workerCounterNum = 0;
+    workerCounterPtr  = reinterpret_cast<int *>(&workerCounterNum);
+
+    proxyServerCounterNum =0;
+    proxyServerCounterPtr = reinterpret_cast<int *>(&proxyServerCounterNum);
 
 }
 
@@ -47,6 +52,7 @@ Worker::~Worker()
 {
   delete paramsPtr;
   delete urlQueryParam;
+  delete proxies;
 }
 
 void Worker::requestWork()
@@ -72,6 +78,7 @@ void Worker::abort()
 
 void Worker::doWork()
 {
+
     qDebug()<<"Starting worker process in Thread "<<thread()->currentThreadId();
 
     /**************
@@ -80,12 +87,13 @@ void Worker::doWork()
       In our case scrape -- so every time I get incremented we have a scraping interval
       So we have to send a signal here to change the 60 to something else
     ************/
-    //for (int i = 0; i < 60; i ++) {
-    for (;;) {
+    for (int counter = 0; counter < 10000; counter ++) {
+    //for (;;) {
         // Checks if the process should be aborted
         mutex.lock();
         bool abort = _abort;
         mutex.unlock();
+       // *workerCounter = counter;
 
         if (abort) {
             qDebug()<<"Aborting worker process in Thread "<<thread()->currentThreadId();
@@ -204,7 +212,7 @@ void Worker::doWork()
 
 
         // Once we're done waiting, value is updated
-        emit valueChanged(QString::number(1));
+        emit valueChanged(QString::number(counter));
     }
 
     // Set _working to false, meaning the process can't be aborted anymore.
@@ -218,9 +226,69 @@ void Worker::doWork()
     emit finished();
 }
 
-void Worker::getParam(QString url,QString userAgent)
+void Worker::getParam(QString url,QString userAgent,QList <QString> *proxyServers)
 {
     *urlQueryParam = url;
+    for(int j =0; j <proxyServers->size(); j++)
+    {
+        *proxies = proxyServers->at(0);
+    }
+
+
+          if(*workerCounterPtr <=  5)
+           {
+
+                // qDebug() << *workerCounterPtr;
+
+                (*proxyServerCounterPtr)+=1;
+                // increment proxyServer index
+
+                if(!proxyServers->isEmpty())
+                {
+                        if( (*proxyServerCounterPtr) <= proxyServers->size() )
+                        {
+                           // qDebug() << proxyServers->at(*proxyServerCounterPtr);
+
+                        }
+
+                        if(*proxyServerCounterPtr == proxyServers->size())
+                        {
+                           *proxyServerCounterPtr = 0;
+                        }
+                }// end of checking proxyServer is empty
+
+           }
+          if(*workerCounterPtr == 5)
+          {
+              if( (*proxyServerCounterPtr) < proxyServers->size() )
+              {
+                   //qDebug() << proxyServers->at(*proxyServerCounterPtr);
+                   qDebug() << "Counter has reset and proxy couter is---> "  << proxyServerCounterPtr;
+
+              }
+
+
+              // if workerCounter == 30, reset workerCounter
+              *workerCounterPtr =0;
+
+              // increment proxyServerPtr to go through each proxy index every interval
+              (*proxyServerCounterPtr)+=1;
+
+          }
+
+          if(*proxyServerCounterPtr == proxyServers->size())
+          {
+             *proxyServerCounterPtr = 0;
+          }
+          // increment workerCounter
+          *(workerCounterPtr)+=1;
+
+
+
+   // *workerCounter =12;
+
+    //for(int i= 0; i <)
+    //qDebug() << *workerCounter;
 
 }
 

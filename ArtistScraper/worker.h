@@ -64,6 +64,12 @@ private:
     QString params;
     QString *urlQueryParam;
     QString *userAgentParam;
+    QString *proxies;
+    int *workerCounterPtr;
+    int workerCounterNum;
+
+    int *proxyServerCounterPtr;
+    int proxyServerCounterNum;
 
 signals:
     /**
@@ -96,7 +102,7 @@ public slots:
     void doWork();
     //void doneWithParameters(QString * doneParam );
     //void receiverDoneWithParameters(QString * receiverParam);
-    void getParam(QString url,QString userAgent);
+    void getParam(QString url,QString userAgent,QList <QString> *proxyServers);
 
     void getProxyFile(QString fileName);
 

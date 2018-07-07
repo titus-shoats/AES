@@ -42,28 +42,23 @@ MainWindow::MainWindow(QWidget *parent) :
      setSearchResults();
      setProxyTable();
      //setEmailTable();
-     setWindowTitle("Artist Email Scraper 0.0.1");
+     setWindowTitle("Beat Crawler v0.1.2");
      ui->lineEdit_keywords_search_box->setPlaceholderText("my mixtape");
      fetchWriteCallBackCurlDataString = "";
      MainWindow::fetchWriteCallBackCurlData = &fetchWriteCallBackCurlDataString;
 
      // The thread and the worker are created in the constructor so it is always safe to delete them.
-
      thread = new QThread();
      worker = new Worker();
-
      worker->moveToThread(thread);
-
     // connect(worker, SIGNAL(valueChanged(QString)), ui->label, SLOT(setText(QString)));
-
      connect(worker, SIGNAL(workRequested()), thread, SLOT(start()));
      connect(thread, SIGNAL(started()), worker, SLOT(doWork()));
      connect(worker, SIGNAL(finished()), thread, SLOT(quit()), Qt::DirectConnection);
      connect(worker,SIGNAL(emitParameters()),this,SLOT(receiverParameters()));
-     connect(this,SIGNAL(postParam(QString,QString)),worker,SLOT(getParam(QString,QString)));
+     connect(this,SIGNAL(postParam(QString,QString,QList <QString> *)),worker,SLOT(getParam(QString,QString,QList <QString> *)));
      connect(worker,SIGNAL(emitEmailList(QString)),this,SLOT(receiverEmailList(QString)));
      //connect(this,SIGNAL(senderOpenProxyFlile(QString)),worker,SLOT(getProxyFile(QString)));
-
      // delete selected proxy row
 
      connect(ui->tableWidget_Proxy->selectionModel(),
@@ -72,16 +67,10 @@ MainWindow::MainWindow(QWidget *parent) :
      emailList = new QList <QString>();
      proxyServers = new QList <QString>();
      connect(worker,SIGNAL(emitKeywordQueue()),this,SLOT(recieverKeywordsQueue()));
-
-    // options = new Options();
-
-    // opt =new Options();
-
      options = new OptionsPtr[numOptions];
      for (int i = 0; i < numOptions; i++) {
          options[i] = new Options();
      }
-
     proxyList = new QStringList[1];
 
     // ui->lineEdit_keywords_search_box->installEventFilter(this);
@@ -182,304 +171,140 @@ MainWindow::~MainWindow()
 
 void MainWindow::setProxyTable(){
 
-
-
-    QStringList proxyTableHeaders;
-
-   // proxyTableHeaders  << "IP" << "Port";
-
-    proxyTableHeaders  << "IP";
-
-
-
-
-
-
-
-     /*****
-
-
-
-    ui->tableView_Proxy->setRowCount(3);
-
-    ui->tableView_Proxy->setColumnCount(2);
-
-    ui->tableView_Proxy->setItem(0, 0, new QTableWidgetItem(QString("98.389.02")));
-
-    ui->tableView_Proxy->setItem(0, 1, new QTableWidgetItem(QString("8080")));
-
-
-
-    ui->tableView_Proxy->setItem(1, 0, new QTableWidgetItem(QString("77.765.02")));
-
-    ui->tableView_Proxy->setItem(1, 1, new QTableWidgetItem(QString("9090")));
-
-
-
-    ui->tableView_Proxy->setItem(2, 0, new QTableWidgetItem(QString("77.765.02")));
-
-    ui->tableView_Proxy->setItem(2, 1, new QTableWidgetItem(QString("9090")));
-
-
-
-
-
-     ***/
-
-    //ui->tableView_Proxy->setColumnCount(1);
-
-    //ui->tableView_Proxy->setHorizontalHeaderLabels(proxyTableHeaders);
-
-    //ui->tableView_Proxy->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-
-
-
-
-
-
-
-
 }
 
 
-
-
-
-
-
 void MainWindow::setSearchResults(){
-
     //search engine results
-
-    for(int i =1000; i >=1; i--){
-
+    for(int i =1000; i >=1; i--)
+    {
        QString s = QString::number(i);
-
-
-
        ui->comboBox_search_results_amount->addItem(s);
-
     }
 
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
 void MainWindow::on_pushButton_Start_clicked(bool checked)
 
 {
-
     QStringList keywordQueueTableHeaders;
-
-
-
-
-
     if(checked){
 
-
-
-
-
         //check if main options are empty, our program is based around these important options
-
         // at least one has to be checked. (These will be empty arrays, if at least one isnt checked!)
-
         if(!ui->checkBox_Google->isChecked() && !ui->checkBox_Yahoo->isChecked() &&
-
-                !ui->checkBox_Bing->isChecked()){
+                !ui->checkBox_Bing->isChecked())
+        {
 
             QMessageBox::information(this,"...","Please select at least one search engine option");
-
             isSearchEngineSelectOne = false;
-
         }
 
-        else{
-
+        else
+        {
             isSearchEngineSelectOne = true;
-
         }
-
 
 
         if(!ui->checkBox_Social_Instagram->isChecked() && !ui->checkBox_Social_Facebook->isChecked()
-
          && !ui->checkBox_Social_Soundcloud->isChecked() && !ui->checkBox_Social_Reverbnation->isChecked()
-
          &&! ui->checkBox_Social_Myspace->isChecked())
-
         {
-
             QMessageBox::information(this,"...","Please select at least one social network option");
-
             isSocialNetworkSelectOne = false;
-
         }
 
-        else{
-
+        else
+        {
              isSocialNetworkSelectOne = true;
-
         }
-
-
 
         if(!ui->checkBox_Email_Gmail->isChecked() && !ui->checkBox_Email_Hotmail->isChecked()
-
          && !ui->checkBox_Email_Yahoo->isChecked() )
 
         {
 
             QMessageBox::information(this,"...","Please select at least one email option");
-
             isEmailSelectOne = false;
-
         }
 
         else{
-
              isEmailSelectOne = true;
-
         }
-
-
 
          //if we press start buttonand keyword searchb box and keyword list hasnt beeen choosen
-
-        if(ui->lineEdit_keywords_search_box->text().isEmpty() && options[4]->keywordLoadListOptions.isEmpty()){
-
+        if(ui->lineEdit_keywords_search_box->text().isEmpty() && options[4]->keywordLoadListOptions.isEmpty())
+        {
             QMessageBox::information(this,"...","Please enter a keyword, or Load a list of keywords");
-
             isKeywordsSelect = false;
-
         }
 
-        else{
-
+        else
+        {
              isKeywordsSelect = true;
-
         }
 
         // search box is empty but we keywords in list // ok
-        if(ui->lineEdit_keywords_search_box->text().isEmpty() && !options[4]->keywordLoadListOptions.isEmpty()){
-
+        if(ui->lineEdit_keywords_search_box->text().isEmpty() && !options[4]->keywordLoadListOptions.isEmpty())
+        {
             isKeywordsSelect = true;
-
         }
 
         // search box is  not empty but we dont have keywords in list // ok
         if(!ui->lineEdit_keywords_search_box->text().isEmpty() && options[4]->keywordLoadListOptions.isEmpty()){
-
             isKeywordsSelect = true;
-
         }
 
 
-
-
         if(isSocialNetworkSelectOne==true &&   isSearchEngineSelectOne ==true && isKeywordsSelect ==true
-
           && isEmailSelectOne == true)
-
         {
 
             ui->pushButton_Start->setText("Stop");
-            qDebug() << "SET";
-
-
-
-
 
             // if keyword list is not empty, and keywordsearch box isnt empty add
-
             // the keyword from search box into keyword list hash table
-
-            if(!ui->lineEdit_keywords_search_box->text().isEmpty() && !options[4]->keywordLoadListOptions.isEmpty()){
-
-
-
+            if(!ui->lineEdit_keywords_search_box->text().isEmpty() && !options[4]->keywordLoadListOptions.isEmpty())
+            {
                options[4]->keywordLoadListOptions.insert(ui->lineEdit_keywords_search_box->text(),0);
 
-
-
             }
-
-
-
              // clears emails queue table if any emails were in it
-
             keywordQueueTableHeaders  << "Keywords" << "Status";
-
             ui->tableWidget_Keywords_Queue->setHorizontalHeaderLabels(keywordQueueTableHeaders);
 
-
-
-
-
             // KEYWORD BOX INPUT
-
-            if(!ui->lineEdit_keywords_search_box->text().isEmpty()){
-
+            if(!ui->lineEdit_keywords_search_box->text().isEmpty())
+            {
                 QMessageBox msgBox;
-
                 QString cleanString = ui->lineEdit_keywords_search_box->text();
 
                // QString filteredString1 = cleanString.remove(QRegExp(QString::fromUtf8("[^\S+(\s\S+)+$]")));
-
-
-
                 // creates a array from string
-
                 //QStringList filteredString2 = filteredString1.split(" ");
-
                 options[3]->keywordSearchBoxOptions[0] = cleanString;
 
-
-
-               //qDebug() <<  options[3]->keywordSearchBoxOptions[0];
-
-
-
             }
-
 
 
             //SEARCH ENGINE OPTION
-
-            if(ui->checkBox_Google->isChecked()){
-
+            if(ui->checkBox_Google->isChecked())
+            {
                 options[0]->searchEngineOptions[0] ="http://google.com";
-
             }
 
-            if(ui->checkBox_Bing->isChecked()){
-
+            if(ui->checkBox_Bing->isChecked())
+            {
                 options[0]->searchEngineOptions[1] ="http://bing.com";
-
             }
 
-            if(ui->checkBox_Yahoo->isChecked()){
-
+            if(ui->checkBox_Yahoo->isChecked())
+            {
                 options[0]->searchEngineOptions[2] ="http://yahoo.com";
-
             }
-
-
 
             //EMAIL OPTION
-
             if(ui->checkBox_Email_Gmail->isChecked()){
 
                options[1]->emailOptions[0] = "@gmail.com";
@@ -680,132 +505,50 @@ void::MainWindow::getKeywordsSearchBoxOrList(){
 void MainWindow::on_pushButton_Load_Keyword_List_clicked()
 
 {
-
-
-
     //ui->lineEdit_keywords_search_box->setEnabled(false);
-
     //ui->pushButton_Load_Keyword_List->setEnabled(true);
-
    // ui->lineEdit_keywords_search_box->setText("");
-
     ui->tableWidget_Keywords_Queue->clear();
-
     ui->tableWidget_Keywords_Queue->setRowCount(0);
-
     ui->tableWidget_Keywords_Queue->setColumnCount(0);
-
     options[4]->keywordLoadListOptions.clear();
-
-
-
     QString fileName = QFileDialog::getOpenFileName(this,"Open text file","C://");
-
-    //QMessageBox::information(this,"...",fileName);
-
-
-
     QFile file(fileName);
-
     QString filteredString1;
-
     QString filteredString2;
-
     QStringList filteredString3;
-
     QHash<QString,int>hashKeywordLoadList;
 
-
-
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-
-
-
-
-
-        //QMessageBox::warning(this,"...","error in opening text file");
-
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+       //QMessageBox::warning(this,"...","error in opening text file");
        // return;
-
     }
 
-
-
-
-
      QFileInfo fi(file.fileName());
-
      QString fileExt = fi.completeSuffix();
 
      if(fileExt == "txt"){
-
-         while(!file.atEnd()){
-
-
-
+         while(!file.atEnd())
+         {
              filteredString1.append(file.readLine());
-
              //filteredString2 = filteredString1.remove(QRegExp(QString::fromUtf8("[^A-Za-z0-9 ]")));
-
              filteredString3 = filteredString1.split(QRegExp("[\r\n]"),QString::SkipEmptyParts);
-
-             //options[4]->keywordLoadListOptions[0] = filteredString3;
-
-
-
-             for(int i = 0; i <filteredString3.size(); i++ ){
-
-               // qDebug() < filteredString3.at(i);
-
-                // hashKeywordLoadList[filteredString3.at(i)]= 0;
-
-                 //options[4]->keywordLoadListOptions = hashKeywordLoadList;
-
+             for(int i = 0; i <filteredString3.size(); i++ )
+             {
                  options[4]->keywordLoadListOptions[filteredString3.at(i)] =0;
-
-
-
              }
 
-
-
           }
-
      }
 
-     else{
-
-
-
-         QMessageBox::warning(this,"...","Please select a .txt file");
-
-
-
+     else
+     {
+         QMessageBox::warning(this,"...","Please select a text file");
      }
-
-
 
       file.close();
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -814,201 +557,20 @@ void MainWindow::setEmailTable()
 
 {
 
-//    QString fileName = "C:/Users/ace/Documents/QT_Projects/Tips/emails.txt";
-
-
-
-//    //QMessageBox::information(this,"...",fileName);
-
-
-
-//    QFile file(fileName);
-
-//    QString filteredString1;
-
-//    QString filteredString2;
-
-//    QStringList filteredString3;
-
-//    emailModelTable = new QStandardItemModel();
-
-//    QStringList emailsLabel;
-
-//    emailsLabel << "Emails";
-
-//    emailModelTable->setHorizontalHeaderLabels(emailsLabel);
-
-
-
-
-
-//    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-
-//        QMessageBox::warning(this,"...","error in opening email file");
-
-//        return;
-
-//    }
-
-//     while(!file.atEnd()){
-
-
-
-//         filteredString1.append(file.readLine());
-
-//         filteredString2 = filteredString1.remove(QRegExp(QString::fromUtf8("[^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3}):([0-9]{1,5})$]")));
-
-//         filteredString3 = filteredString1.split("\n", QString::SkipEmptyParts);
-
-
-
-
-
-//         for (int row = 0; row <10; ++row) {
-
-//             for (int column = 0; column < 1; ++column) {
-
-//                 QStandardItem *item = new QStandardItem(filteredString3.at(row));
-
-//                 emailModelTable->setItem(row, column, item);
-
-//                 emailModelTable->setRowCount(10);;
-
-//             }
-
-//         }
-
-//      }
-
-
-
-//      ui->tableView_Emails->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-//      ui->tableView_Emails->setModel(emailModelTable);
-
-//      ui->tableView_Emails->show();
-
-//      file.close();
-
-
-
-
-
-
-
-       QStringList emailsLabel;
-
-       emailsLabel << "Emails";
-
-
-
-      // ui->tableWidget_Emails->setRowCount(50);
-
-      // ui->tableWidget_Emails->setColumnCount(1);
-
-       /**********
-
-        Only show 30 at a time
-
-        30
-
-        60
-
-        90
-
-        120
-
-        150
-
-       Anytime we hit the next button
-
-
-
-       the complete end is the size of the array
-
-       the complete end is less than 0
-
-
-
-      *******/
-
-
-
-//       int start =0;
-
-//       int end = 30;
-
-
-
-
-
-//       while(start > end){
-
-
-
-//       }
-
-
-
-
-
-
-
-         // if i is less tha
-
-       for(int i  = *previousEmailPaginationPtr; i <= *nextEmailPaginationPtr; i++){
-
-           //ui->tableWidget_Emails->setItem(i, 0, new QTableWidgetItem(QString("@gmail.com")));
-
-           qDebug() << i;
-
-       }
-
-
-
-
-
-      // ui->tableWidget_Emails->setHorizontalHeaderLabels(emailsLabel);
-
-      // ui->tableWidget_Emails->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-
-
-
-
 }
-
-
-
-
-
-
 
 bool MainWindow::eventFilter(QObject *watched,QEvent *event){
 
     if(watched == ui->lineEdit_keywords_search_box && event->type() == QEvent::MouseButtonPress){
 
-
-
         /*******
-
          if we enter keywords in keyword search box, disable keyword load list button
-
-
-
        *****/
-
          //ui->lineEdit_keywords_search_box->setEnabled(true);
-
         // ui->pushButton_Load_Keyword_List->setEnabled(false);
 
          return true;
-
     }
-
-
-
-
 
     return false;
 
@@ -1020,44 +582,16 @@ bool MainWindow::eventFilter(QObject *watched,QEvent *event){
 
 void MainWindow::mousePressEvent(QMouseEvent *event){
 
-
-
     //    if we click left button, enable both keyword load list button, and keyword search box
-
-
-
     if(event->button() ==Qt::LeftButton)
 
         {
-
-
-
         // ui->lineEdit_keywords_search_box->setEnabled(true);
-
          //ui->pushButton_Load_Keyword_List->setEnabled(true);
 
         }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2451,219 +1985,91 @@ void MainWindow::receiverParameters()
 
                        }
 
-
-
-
-
                      // qDebug() << searchEngineParam;
-
                      // qDebug()<<  searchEngine;
-
                      // qDebug()<<  vectorSearchEngineOptions;
-
                      // qDebug() << *keywordListSearchEngineCounterPtr;
-
-
-
-
-
             }
 
+            /********End of All Scraping Code******/
 
-
-
-                           /********End of All Scraping Code******/
-
-
-
-           // sending signal after we done
-
-           emit postParam(searchEngineParam,options[5]->userAgentsOptions[0]);
-
+           // sending params/options signal after we done
+           emit postParam(searchEngineParam,options[5]->userAgentsOptions[0],proxyServers);
 
            /****if timer is less or equal to search results combox box***/
-
-           if(QString::number(*keywordListNumPtrCounter) == ui->comboBox_search_results_amount->currentText()){
-
-
+           if(QString::number(*keywordListNumPtrCounter) == ui->comboBox_search_results_amount->currentText())
+           {
 
               // worker->abort();
-
                //thread->quit();
-
-
-
-              if(!options[4]->keywordLoadListOptions.isEmpty()){
-
-
-
-                  //keywordLoadListLastItem = options[4]->keywordLoadListOptions.end();
-
-
-
+              if(!options[4]->keywordLoadListOptions.isEmpty())
+              {
                   filterCurrentKeyword = *currentKeywordPtr;
-
                   filterCurrentKeyword = filterCurrentKeyword.replace("+"," ");
-
                   QHash<QString,int>::const_iterator j = options[4]->keywordLoadListOptions.constBegin();
-
                   while(j != options[4]->keywordLoadListOptions.constEnd()){
-
-
-
                    // if keys inside hash does not match current keyword, and is not empty, there more elements
-
                       if(j.key() != filterCurrentKeyword)
 
                       {
-
                                  // if key is not empty, and value is 0/not tagged theres more elements ahead
-
                                  // mark it as one, and increment keywordlistptr
-
                                  if(!j.key().isEmpty() && j.value() == 0){
 
-
-
                                      // current keyword key can now be assigned 1 because were done with it
-
                                      options[4]->keywordLoadListOptions.insert(filterCurrentKeyword,1);
-
-
-
                                      // restart keywordList timer to start again with new keyword in hash
-
                                      *keywordListNumPtrCounter = 0;
-
 
 
                                  }
 
-
-
                                  // if key is not empty, and value is 1/tagged,
-
                                  // we still want to increase keywordlistptr to get the next keyword in list
 
                                   if(!j.key().isEmpty() && j.value() == 1){
-
-
-
                                      // if the hash key is empty theres no more keywords, so stop scraping
-
                                      // and stop all threads.
-
                                      //thread->quit();
-
                                      //worker->abort();
-
                                      *keywordListNumPtrCounter = 0;
-
                                      //ui->pushButton_Start->setText("Start");
-
                                      //qDebug() << options[4]->keywordLoadListOptions;
-
-
 
                                  }
 
-
-
                                   // we have to figure out when were done using all the keywords in list??
-
                                   if(j.value() == 1 && j.value() != 0){
-
                                       //*keywordListNumPtrCounter = 0;
-
                                      // thread->quit();
-
                                      // worker->abort();
-
                                      // ui->pushButton_Start->setText("Start");
-
                                   }
-
-
-
                       }
-
-                      else{
-
+                      else
+                      {
                         //qDebug() << j.value();
-
                       }
-
                        j++;
-
-                  }
-
-
+                  }// end while looo
 
                 // qDebug() <<options[4]->keywordLoadListOptions;
-
                 // qDebug() << "keywordlistptr--->>" << *keywordListNumPtrCounter;
 
-
-
-
-
-              }else{
-
-
+              }
+              else
+              {
 
               }
 
-
-
-               // if the last item in vector is true, and dosent match our current value
-
-               // theres more elements after our current element, we need
-
-               // this to make sure out pointer dosent get out of a range/QVector out of range.
-
-
-
-//               if(!vectorSearchEngineOptions.last().isEmpty()){
-
-//                   vectorSearchEngineOptionsLastItem = vectorSearchEngineOptions.last();
-
-//                   if( vectorSearchEngineOptionsLastItem !=  vectorSearchEngineOptions.at(*searchEngineNumPtr) ){
-
-//                               (*searchEngineNumPtr)+=1;
-
-//                   }
-
-//               }
-
-
-
-
-
-//               QString filterCurrentKeyword = *currentKeywordPtr;
-
-//               /*******MAKE SURE TO REMOVE ANY DUPLICATE KEYWORDS AS YOUR/BEFORE LOADING THEM INTO HASH*****/
-
-//               options[4]->keywordLoadListOptions.insert(filterCurrentKeyword.replace("+"," "),1);
-
-
-
-//               //qDebug() << options[4]->keywordLoadListOptions;
-
-
-
-
-
            }
 
-           else{
-
-               qDebug() << "Keyword List Pointer Counter-->" <<QString::number(*keywordListNumPtrCounter);
-
+           else
+           {
+               qDebug() <<QString::number(*keywordListNumPtrCounter);
               // qDebug() << ui->comboBox_search_results_amount->currentText();
 
            }//  end of checking end of results
-
-
 
 }
 
@@ -2672,40 +2078,22 @@ void MainWindow::receiverParameters()
 void MainWindow::receiverEmailList(QString list)
 
 {
-
-
-
         QStringList emailTableHeaders;
-
         emailTableHeaders  << "Emails";
-
-
-
          *emailList << list;
-
          ui->tableWidget_Emails->setRowCount(emailList->size());
-
          ui->tableWidget_Emails->setColumnCount(1);
-
-         for(int i =0; i < emailList->size(); i++){
+         for(int i =0; i < emailList->size(); i++)
+         {
 
               ui->tableWidget_Emails->setItem(i, 0, new QTableWidgetItem(emailList->at(i)));
 
          }
 
          ui->tableWidget_Emails->setHorizontalHeaderLabels(emailTableHeaders);
-
          ui->tableWidget_Emails->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
-
-
-
-
 }
-
-
-
-
 
 
 void MainWindow::recieverProxyTableSelection(const QItemSelection &selected, const QItemSelection &deselected)
@@ -2713,214 +2101,105 @@ void MainWindow::recieverProxyTableSelection(const QItemSelection &selected, con
 {
 
 
-
-
-
-    QHash<QString, int>::const_iterator i = options[4]->keywordLoadListOptions.constBegin();
-
-
-
-
-
           /**********
-
              selected which is a type of QItemSelection object
-
              is a type, which is QModelIndexList, this type gives us a method-
-
              called indexes(), which return a type of  QModelIndexList object.
-
              This object holds nested objects, objects within objects.
-
              These inner objects are type QModelIndex
-
              So we have to iterate/loop through the QModelIndex;
 
-
-
              We can do that by a foreach loop.
-
              We create a type of QModelIndex that will be a object.
-
              Through each iteration/loop we assign the inner objects to &index
-
              which is a reference. We then can now access the QModexlIndexes,
-
              which were once nested.
-
-
 
           *******/
 
           QModelIndexList  indexes = selected.indexes();
-
-          //qDebug() << selected;
-
           if(ui->checkBox_Delete_Proxy->isChecked()){
-
               foreach(const QModelIndex &index,indexes){
-
-
 
                   // removes row user has selected
                   ui->tableWidget_Proxy->removeRow(index.row());
                   // removes proxy servers from qstring list, if user has added proxies
                   proxyServers->removeAt(index.row());
 
-
               }
-
           }
-
-
-
-
 
 }
 
 
 
 void MainWindow::recieverKeywordsQueue(){
-
     QStringList keywordQueueTableHeaders;
-
     QStringList keywordKey;
-
     QList <int> keywordValue;
-
-
-
     QHash<QString,int>::const_iterator i = options[4]->keywordLoadListOptions.constBegin();
-
     QString filterCurrentKeyword;
-
     filterCurrentKeyword = currentKeywordPtr->replace("+"," ");
-
-
-
     while(i != options[4]->keywordLoadListOptions.constEnd()){
-
-             if(!i.key().isEmpty()){
-
+             if(!i.key().isEmpty())
+             {
                  keywordKey << i.key();
-
              }
 
              keywordValue << i.value();
-
-
-
             i++;
-
     }
 
     keywordQueueTableHeaders  << "Keywords" << "Status";
-
     ui->tableWidget_Keywords_Queue->setRowCount(keywordKey.size());
-
     ui->tableWidget_Keywords_Queue->setColumnCount(2);
 
-
-
-
-
-    for(int row = 0; row <  keywordKey.size(); row++){
-
-            for(int col =0; col < 2; col++){
-
-
-
-
-
-
+    for(int row = 0; row <  keywordKey.size(); row++)
+    {
+            for(int col =0; col < 2; col++)
+            {
 
                 // if current keyword matches this item, change set item string to "Currently Processing"
-
                 // if keyword is 1/done change it to "Complete"
-
                 // if keyword is 0 /not dont change it to "Waiting.."
 
-
-
-                if(col == 0){
-
-
-
-                    ui->tableWidget_Keywords_Queue->setItem(row, col, new QTableWidgetItem(keywordKey.at(row)));
-
-
-
+                if(col == 0)
+                {
+                        ui->tableWidget_Keywords_Queue->setItem(row, col, new QTableWidgetItem(keywordKey.at(row)));
                 }
 
 
 
-                if(col == 1){
+                if(col == 1)
+                {
+                       // qDebug() << *currentKeywordPtr;
+                       // if current keyword matches a keyword in our row change it to "Processing"
+                       // else change it to "Waiting"
+                        QString test = keywordKey.at(row);
+                        if(filterCurrentKeyword == keywordKey.at(row) && keywordValue.at(row) ==0  && !test.isEmpty())
+                        {
+                           ui->tableWidget_Keywords_Queue->setItem(row, col, new QTableWidgetItem("Processing..."));
+                          // ui->tableWidget_Keywords_Queue->item(row,col)->setBackground(QBrush(QColor(250,0,0)));
+                        }
 
+                       // keyword does not match current keyword
+                       if(filterCurrentKeyword != keywordKey.at(row) && keywordValue.at(row) ==0   && !test.isEmpty())
+                       {
+                           ui->tableWidget_Keywords_Queue->setItem(row, col, new QTableWidgetItem("Waiting..."));
+                       }
 
-
-
-
-                  // qDebug() << *currentKeywordPtr;
-
-                   // if current keyword matches a keyword in our row change it to "Processing"
-
-                    // else change it to "Waiting"
-
-                    QString test = keywordKey.at(row);
-
-                   if(filterCurrentKeyword == keywordKey.at(row) && keywordValue.at(row) ==0  && !test.isEmpty()){
-
-
-
-                       ui->tableWidget_Keywords_Queue->setItem(row, col, new QTableWidgetItem("Processing..."));
-
-                      // ui->tableWidget_Keywords_Queue->item(row,col)->setBackground(QBrush(QColor(250,0,0)));
-
-
-
-                   }
-
-
-
-                   // keyword does not match current keyword
-
-                   if(filterCurrentKeyword != keywordKey.at(row) && keywordValue.at(row) ==0   && !test.isEmpty())
-
-                   {
-
-
-
-                       ui->tableWidget_Keywords_Queue->setItem(row, col, new QTableWidgetItem("Waiting..."));
-
-
-
-                   }
-
-
-
-                   // if keyword is done
-
-                   if(keywordValue.at(row) == 1 && filterCurrentKeyword != keywordKey.at(row)  && !test.isEmpty()){
-
-                       ui->tableWidget_Keywords_Queue->setItem(row, col, new QTableWidgetItem("Completed..."));
-
-
-
-                   }
-
-
-
-
+                       // if keyword is done
+                       if(keywordValue.at(row) == 1 && filterCurrentKeyword != keywordKey.at(row)  && !test.isEmpty())
+                       {
+                           ui->tableWidget_Keywords_Queue->setItem(row, col, new QTableWidgetItem("Completed..."));
+                       }
 
                 }
-
 
 
             }// end of for inner loop
 
       } // end of for outer loop
-
-
 
     ui->tableWidget_Keywords_Queue->setHorizontalHeaderLabels(keywordQueueTableHeaders);
     ui->tableWidget_Keywords_Queue->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -2932,7 +2211,6 @@ void MainWindow::recieverKeywordsQueue(){
 void MainWindow::on_pushButton_Add_Proxy_clicked()
 {
     QStringList proxyTableHeaders;
-
     if(!ui->lineEdit_Proxy_Port->text().isEmpty() && !ui->lineEdit_Proxy_Host->text().isEmpty() )
 
     {
@@ -2940,23 +2218,16 @@ void MainWindow::on_pushButton_Add_Proxy_clicked()
 
 
     }
-
-
     // Anytime add proxy button is clicked we increment a counter to become the index for the current proxy
-
     (*addProxyCounterPtr)+=1;
-
     //insert proxy into qlist
     proxyServers->insert(*addProxyCounterPtr,ui->lineEdit_Proxy_Host->text()+":"  + ui->lineEdit_Proxy_Port->text());
-
     proxyTableHeaders  << "Proxy Server" << "Proxy Port";
-
     ui->tableWidget_Proxy->setRowCount(proxyServers->size());
-
     ui->tableWidget_Proxy->setColumnCount(2);
-
     // loops through the size of the proxyServer qlist
-    for(int row = 0; row < proxyServers->size(); row++){
+    for(int row = 0; row < proxyServers->size(); row++)
+    {
 
             QString url = "http://"+proxyServers->at(row);
             QUrl server(url);
@@ -2975,9 +2246,9 @@ void MainWindow::on_pushButton_Add_Proxy_clicked()
             int proxyPortPosition = 0;
             proxyPortString = ui->lineEdit_Proxy_Port->text();
 
-
             // if proxy host regex does not validate to 2,its invalid
-            if(hostValidator.validate(proxyHostString, proxyHostPosition) !=2){
+            if(hostValidator.validate(proxyHostString, proxyHostPosition) !=2)
+            {
 
                 // remove current proxy from proxyServer qlist
                 proxyServers->removeAll(ui->lineEdit_Proxy_Host->text()+":"  + ui->lineEdit_Proxy_Port->text());
@@ -2995,8 +2266,8 @@ void MainWindow::on_pushButton_Add_Proxy_clicked()
 
 
             // if proxy port regex does not validate to 2,its invalid
-            if(portValidator.validate(proxyPortString, proxyPortPosition) !=2){
-
+            if(portValidator.validate(proxyPortString, proxyPortPosition) !=2)
+            {
                 // remove current proxy from proxyServer qlist
                 proxyServers->removeAll(ui->lineEdit_Proxy_Host->text()+":"  + ui->lineEdit_Proxy_Port->text());
                 QMessageBox::warning(this,"...","Proxy port error, please enter a valid port");
@@ -3014,11 +2285,13 @@ void MainWindow::on_pushButton_Add_Proxy_clicked()
           // qDebug() <<*proxyServers;
 
 
-            for(int col =0; col < 2; col++){
+            for(int col =0; col < 2; col++)
+            {
 
 
                  // if both proxy port, and proxy sever is valid, add it to table
-                if((portValidator.validate(proxyPortString, proxyPortPosition) ==2) && (hostValidator.validate(proxyHostString, proxyHostPosition) ==2)) {
+                if((portValidator.validate(proxyPortString, proxyPortPosition) ==2) && (hostValidator.validate(proxyHostString, proxyHostPosition) ==2))
+                {
                     if(col == 1)
                     {
                         ui->tableWidget_Proxy->setItem(row, col, new QTableWidgetItem(QString::number(server.port())));
@@ -3028,7 +2301,8 @@ void MainWindow::on_pushButton_Add_Proxy_clicked()
                 }
 
 
-                if((portValidator.validate(proxyPortString, proxyPortPosition) ==2) && (hostValidator.validate(proxyHostString, proxyHostPosition) ==2)) {
+                if((portValidator.validate(proxyPortString, proxyPortPosition) ==2) && (hostValidator.validate(proxyHostString, proxyHostPosition) ==2))
+                {
 
                     if(col == 0)
                     {
@@ -3043,9 +2317,7 @@ void MainWindow::on_pushButton_Add_Proxy_clicked()
       }// outer for loop
 
     ui->tableWidget_Proxy->setHorizontalHeaderLabels(proxyTableHeaders);
-
     ui->tableWidget_Proxy->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
 }
 
 void MainWindow::on_pushButton_Load_Proxies_clicked()

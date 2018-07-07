@@ -9,6 +9,7 @@
 #include "../../ArtistScraper/worker.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
+#include <QtCore/QList>
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'worker.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
@@ -21,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_Worker_t {
-    QByteArrayData data[15];
-    char stringdata0[148];
+    QByteArrayData data[17];
+    char stringdata0[177];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -44,15 +45,17 @@ QT_MOC_LITERAL(9, 96, 6), // "doWork"
 QT_MOC_LITERAL(10, 103, 8), // "getParam"
 QT_MOC_LITERAL(11, 112, 3), // "url"
 QT_MOC_LITERAL(12, 116, 9), // "userAgent"
-QT_MOC_LITERAL(13, 126, 12), // "getProxyFile"
-QT_MOC_LITERAL(14, 139, 8) // "fileName"
+QT_MOC_LITERAL(13, 126, 15), // "QList<QString>*"
+QT_MOC_LITERAL(14, 142, 12), // "proxyServers"
+QT_MOC_LITERAL(15, 155, 12), // "getProxyFile"
+QT_MOC_LITERAL(16, 168, 8) // "fileName"
 
     },
     "Worker\0workRequested\0\0valueChanged\0"
     "value\0finished\0emitParameters\0"
     "emitEmailList\0emitKeywordQueue\0doWork\0"
-    "getParam\0url\0userAgent\0getProxyFile\0"
-    "fileName"
+    "getParam\0url\0userAgent\0QList<QString>*\0"
+    "proxyServers\0getProxyFile\0fileName"
 };
 #undef QT_MOC_LITERAL
 
@@ -79,8 +82,8 @@ static const uint qt_meta_data_Worker[] = {
 
  // slots: name, argc, parameters, tag, flags
        9,    0,   69,    2, 0x0a /* Public */,
-      10,    2,   70,    2, 0x0a /* Public */,
-      13,    1,   75,    2, 0x0a /* Public */,
+      10,    3,   70,    2, 0x0a /* Public */,
+      15,    1,   77,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
@@ -92,8 +95,8 @@ static const uint qt_meta_data_Worker[] = {
 
  // slots: parameters
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString, QMetaType::QString,   11,   12,
-    QMetaType::Void, QMetaType::QString,   14,
+    QMetaType::Void, QMetaType::QString, QMetaType::QString, 0x80000000 | 13,   11,   12,   14,
+    QMetaType::Void, QMetaType::QString,   16,
 
        0        // eod
 };
@@ -111,7 +114,7 @@ void Worker::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 4: _t->emitEmailList((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 5: _t->emitKeywordQueue(); break;
         case 6: _t->doWork(); break;
-        case 7: _t->getParam((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 7: _t->getParam((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2])),(*reinterpret_cast< QList<QString>*(*)>(_a[3]))); break;
         case 8: _t->getProxyFile((*reinterpret_cast< QString(*)>(_a[1]))); break;
         default: ;
         }
