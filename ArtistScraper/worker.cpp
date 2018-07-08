@@ -87,8 +87,8 @@ void Worker::doWork()
       In our case scrape -- so every time I get incremented we have a scraping interval
       So we have to send a signal here to change the 60 to something else
     ************/
-    for (int counter = 0; counter < 10000; counter ++) {
-    //for (;;) {
+    //for (int counter = 0; counter < 100000; counter ++) {
+    for (;;) {
         // Checks if the process should be aborted
         mutex.lock();
         bool abort = _abort;
@@ -253,7 +253,7 @@ void Worker::doWork()
 
 
         // Once we're done waiting, value is updated
-        emit valueChanged(QString::number(counter));
+        emit valueChanged(QString::number(1));
     }
 
     // Set _working to false, meaning the process can't be aborted anymore.

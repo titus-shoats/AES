@@ -109,7 +109,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
@@ -143,13 +143,26 @@
      <attribute name="title">
       <string>Queue Keywords</string>
      </attribute>
+     <widget class="QCheckBox" name="checkBox_Delete_Keywords">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>220</y>
+        <width>111</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Delete Keywords</string>
+      </property>
+     </widget>
      <widget class="QTableWidget" name="tableWidget_Keywords_Queue">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>591</width>
-        <height>231</height>
+        <x>0</x>
+        <y>0</y>
+        <width>621</width>
+        <height>221</height>
        </rect>
       </property>
      </widget>

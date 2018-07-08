@@ -37,12 +37,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
      ui->setupUi(this);
+
      QSize size = this->size();
      this->setFixedSize(size);
      setSearchResults();
      setProxyTable();
      //setEmailTable();
-     setWindowTitle("Beat Crawler v0.1.2");
+     setWindowTitle("Beat Crawler V0.1.8 (C) Beatcrawler.com");
      ui->lineEdit_keywords_search_box->setPlaceholderText("my mixtape");
      fetchWriteCallBackCurlDataString = "";
      MainWindow::fetchWriteCallBackCurlData = &fetchWriteCallBackCurlDataString;
@@ -70,6 +71,8 @@ MainWindow::MainWindow(QWidget *parent) :
              SIGNAL(selectionChanged(const QItemSelection & , const QItemSelection & )),this,
              SLOT(recieverProxyTableSelection(const QItemSelection &,const QItemSelection &)));
      emailList = new QList <QString>();
+    // setEmailList = new QList <QString>();
+
      proxyServers = new QList <QString>();
      connect(worker,SIGNAL(emitKeywordQueue()),this,SLOT(recieverKeywordsQueue()));
      options = new OptionsPtr[numOptions];
@@ -143,6 +146,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
+
+
+
+
 }
 
 
@@ -163,6 +170,7 @@ MainWindow::~MainWindow()
     delete thread;
     delete worker;
     delete emailList;
+    //delete setEmailList;
     delete ui;
     delete proxyServers;
 
@@ -273,6 +281,7 @@ void MainWindow::on_pushButton_Start_clicked(bool checked)
             if(!ui->lineEdit_keywords_search_box->text().isEmpty() && !options[4]->keywordLoadListOptions.isEmpty())
             {
                options[4]->keywordLoadListOptions.insert(ui->lineEdit_keywords_search_box->text(),0);
+
 
             }
              // clears emails queue table if any emails were in it
@@ -419,6 +428,7 @@ void MainWindow::on_pushButton_Start_clicked(bool checked)
             worker->requestWork();
             emit emitsenderStartThreadCounters("Start");
             ui->label_Curl_Status->setText("Status: Starting...");
+            clickedStartStopButton = true;
 
 
 
@@ -435,6 +445,7 @@ void MainWindow::on_pushButton_Start_clicked(bool checked)
         thread->quit();
         emit emitsenderStopThreadCounters("Stop");
         ui->label_Curl_Status->setText("Status: ");
+        clickedStartStopButton = false;
 
         ui->pushButton_Start->setText("Start");
 
@@ -2092,20 +2103,31 @@ void MainWindow::receiverEmailList(QString list)
 {
         QStringList emailTableHeaders;
         emailTableHeaders  << "Emails";
-         *emailList << list;
-         ui->tableWidget_Emails->setRowCount(emailList->size());
+        *emailList << list;
+
+        // convert qlis to qset to remove dups
+         QSet<QString> set = emailList->toSet();
+
+        // convert qset back to list
+         setEmailList = set.toList();
+
+
+         ui->tableWidget_Emails->setRowCount(setEmailList.size());
          ui->tableWidget_Emails->setColumnCount(1);
-         for(int i =0; i < emailList->size(); i++)
+         for(int i =0; i < setEmailList.size(); i++)
          {
 
-              ui->tableWidget_Emails->setItem(i, 0, new QTableWidgetItem(emailList->at(i)));
+
+              ui->tableWidget_Emails->setItem(i, 0, new QTableWidgetItem(setEmailList.at(i)));
 
          }
 
          ui->tableWidget_Emails->setHorizontalHeaderLabels(emailTableHeaders);
          ui->tableWidget_Emails->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
-         ui->label_Items_Found->setText("Items Found: " +QString::number(emailList->size()));
+         // items found on bottom status bar
+         ui->label_Items_Found->setText("Items Found: " +QString::number(setEmailList.size()));
+         ui->tableWidget_Emails->resizeRowsToContents();
 
 }
 
@@ -2164,6 +2186,7 @@ void MainWindow::recieverKeywordsQueue(){
             i++;
     }
 
+
     keywordQueueTableHeaders  << "Keywords" << "Status";
     ui->tableWidget_Keywords_Queue->setRowCount(keywordKey.size());
     ui->tableWidget_Keywords_Queue->setColumnCount(2);
@@ -2192,7 +2215,16 @@ void MainWindow::recieverKeywordsQueue(){
                         QString test = keywordKey.at(row);
                         if(filterCurrentKeyword == keywordKey.at(row) && keywordValue.at(row) ==0  && !test.isEmpty())
                         {
-                           ui->tableWidget_Keywords_Queue->setItem(row, col, new QTableWidgetItem("Processing..."));
+
+                            if(clickedStartStopButton == false){
+                                ui->tableWidget_Keywords_Queue->setItem(row, col, new QTableWidgetItem("Aborted"));
+
+                            }
+                            if(clickedStartStopButton == true){
+                                ui->tableWidget_Keywords_Queue->setItem(row, col, new QTableWidgetItem("Processing..."));
+
+                            }
+                           //ui->tableWidget_Keywords_Queue->setItem(row, col, new QTableWidgetItem("Processing..."));
                           // ui->tableWidget_Keywords_Queue->item(row,col)->setBackground(QBrush(QColor(250,0,0)));
                         }
 
@@ -2217,8 +2249,29 @@ void MainWindow::recieverKeywordsQueue(){
 
     ui->tableWidget_Keywords_Queue->setHorizontalHeaderLabels(keywordQueueTableHeaders);
     ui->tableWidget_Keywords_Queue->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableWidget_Keywords_Queue->resizeRowsToContents();
+
+
+
+
+
 
 }
+
+void MainWindow::deleteKeyordsListTable(){
+    // create empty table
+    QStringList keywordQueueTableHeaders;
+    keywordQueueTableHeaders  << "Keywords" << "Status";
+    ui->tableWidget_Keywords_Queue->setRowCount(0);
+    ui->tableWidget_Keywords_Queue->setColumnCount(0);
+    ui->tableWidget_Keywords_Queue->setHorizontalHeaderLabels(keywordQueueTableHeaders);
+    ui->tableWidget_Keywords_Queue->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableWidget_Keywords_Queue->resizeRowsToContents();
+    *currentKeywordPtr = "";
+
+}
+
+
 
 void MainWindow::recieverCurlResponseInfo(QString info)
 {
@@ -2349,9 +2402,23 @@ void MainWindow::on_pushButton_Add_Proxy_clicked()
 
     ui->tableWidget_Proxy->setHorizontalHeaderLabels(proxyTableHeaders);
     ui->tableWidget_Proxy->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableWidget_Proxy->resizeRowsToContents();
+
 }
 
 void MainWindow::on_pushButton_Load_Proxies_clicked()
 {
 
+}
+
+void MainWindow::on_checkBox_Delete_Keywords_clicked()
+{
+
+    if(ui->checkBox_Delete_Keywords->isChecked())
+    {
+        QTimer::singleShot(100,this,SLOT(deleteKeyordsListTable()));
+        options[4]->keywordLoadListOptions.clear();
+
+
+    }
 }

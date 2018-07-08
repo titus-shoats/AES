@@ -15,6 +15,8 @@
 #include  <QUrl>
 #include <QThread>
 #include <QItemSelection>
+#include <QAbstractItemView>
+
 
 
 namespace Ui {
@@ -44,17 +46,12 @@ private slots:
 
 
     void on_pushButton_Start_clicked(bool checked);
-
     void on_pushButton_Load_Keyword_List_clicked();
-
-
     bool eventFilter(QObject *watched,QEvent *event);
-
     void mousePressEvent(QMouseEvent *event);
-
     void on_pushButton_Add_Proxy_clicked();
-
     void on_pushButton_Load_Proxies_clicked();
+    void on_checkBox_Delete_Keywords_clicked();
 
 public slots:
 
@@ -63,10 +60,7 @@ public slots:
       void recieverProxyTableSelection(const QItemSelection &,const QItemSelection &);
       void recieverKeywordsQueue();
       void recieverCurlResponseInfo(QString info);
-
-
-
-
+      void deleteKeyordsListTable();
 
 signals:
     void postParam(QString,QString,QList <QString> *);
@@ -122,6 +116,9 @@ private:
     bool  isProxyHostValid;
 
     QList <QString> *emailList;
+    // sets QSet back to list
+    // this is because were setting a qlist to qset to remove dups, then from a qset to qlist again
+    QList <QString> setEmailList;
     QList <QString> *proxyServers;
 
     QThread *thread;
@@ -152,6 +149,8 @@ private:
     int * previousEmailPaginationPtr;
     int nextEmailPagination;
     int previousEmailPagination;
+    bool clickedStartStopButton;
+
 
 
 };

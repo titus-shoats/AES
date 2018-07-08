@@ -49,6 +49,7 @@ public:
     QTableWidget *tableWidget_Emails;
     QPushButton *pushButton_Save;
     QWidget *tab;
+    QCheckBox *checkBox_Delete_Keywords;
     QTableWidget *tableWidget_Keywords_Queue;
     QWidget *tab_4;
     QTabWidget *tabWidget_Options;
@@ -140,9 +141,12 @@ public:
         tabWidget_Queue_Keywords->addTab(tab_3, QString());
         tab = new QWidget();
         tab->setObjectName(QStringLiteral("tab"));
+        checkBox_Delete_Keywords = new QCheckBox(tab);
+        checkBox_Delete_Keywords->setObjectName(QStringLiteral("checkBox_Delete_Keywords"));
+        checkBox_Delete_Keywords->setGeometry(QRect(490, 220, 111, 20));
         tableWidget_Keywords_Queue = new QTableWidget(tab);
         tableWidget_Keywords_Queue->setObjectName(QStringLiteral("tableWidget_Keywords_Queue"));
-        tableWidget_Keywords_Queue->setGeometry(QRect(10, 10, 591, 231));
+        tableWidget_Keywords_Queue->setGeometry(QRect(0, 0, 621, 221));
         tabWidget_Queue_Keywords->addTab(tab, QString());
         tab_4 = new QWidget();
         tab_4->setObjectName(QStringLiteral("tab_4"));
@@ -265,7 +269,7 @@ public:
         pushButton_Load_Keyword_List->setGeometry(QRect(490, 10, 71, 21));
         label_Current_Keyword = new QLabel(centralWidget);
         label_Current_Keyword->setObjectName(QStringLiteral("label_Current_Keyword"));
-        label_Current_Keyword->setGeometry(QRect(416, 80, 201, 20));
+        label_Current_Keyword->setGeometry(QRect(346, 80, 271, 20));
         label_Curl_Status = new QLabel(centralWidget);
         label_Curl_Status->setObjectName(QStringLiteral("label_Curl_Status"));
         label_Curl_Status->setGeometry(QRect(11, 391, 291, 21));
@@ -286,7 +290,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget_Queue_Keywords->setCurrentIndex(0);
+        tabWidget_Queue_Keywords->setCurrentIndex(1);
         tabWidget_Options->setCurrentIndex(2);
 
 
@@ -302,6 +306,7 @@ public:
         pushButton_Start->setText(QApplication::translate("MainWindow", "Start", nullptr));
         pushButton_Save->setText(QApplication::translate("MainWindow", "Save", nullptr));
         tabWidget_Queue_Keywords->setTabText(tabWidget_Queue_Keywords->indexOf(tab_3), QApplication::translate("MainWindow", "Harvested Emails", nullptr));
+        checkBox_Delete_Keywords->setText(QApplication::translate("MainWindow", "Delete Keywords", nullptr));
         tabWidget_Queue_Keywords->setTabText(tabWidget_Queue_Keywords->indexOf(tab), QApplication::translate("MainWindow", "Queue Keywords", nullptr));
         label_Search_Engine_Label_Option->setText(QApplication::translate("MainWindow", "Parse selected Search Engines Only", nullptr));
         checkBox_Google->setText(QApplication::translate("MainWindow", "google", nullptr));
