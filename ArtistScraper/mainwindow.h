@@ -158,7 +158,6 @@ private:
     bool clickedStartStopButton;
 
 
-
 };
 
 #endif // MAINWINDOW_H

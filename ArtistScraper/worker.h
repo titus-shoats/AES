@@ -48,6 +48,7 @@ public:
      */
     void abort();
 
+
 private:
     /**
      * @brief Process is aborted when @em true

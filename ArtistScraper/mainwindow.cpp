@@ -83,6 +83,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // ui->lineEdit_keywords_search_box->installEventFilter(this);
 
+     QStringList emailTableHeaders;
+     emailTableHeaders  << "Emails";
+     ui->tableWidget_Emails->setRowCount(60000);
+     ui->tableWidget_Emails->setColumnCount(1);
+
+     ui->tableWidget_Emails->setHorizontalHeaderLabels(emailTableHeaders);
+     ui->tableWidget_Emails->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+     ui->tableWidget_Emails->resizeRowsToContents();
+
      ui->tableWidget_Proxy->setSelectionBehavior(QAbstractItemView::SelectRows);
 
      ui->pushButton_Start->setCheckable(true);
@@ -145,6 +154,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     addProxyCounterNum = 0;
     addProxyCounterPtr = &addProxyCounterNum;
+
+
+    // put inside method
+    for(int j =0;  j < ui->tableWidget_Emails->rowCount();  j ++)
+    {
+            ui->tableWidget_Emails->hideRow(j);
+    }
 
 
 
@@ -2100,21 +2116,17 @@ void MainWindow::receiverParameters()
 void MainWindow::receiverEmailList(QString list)
 
 {
-        QStringList emailTableHeaders;
-        emailTableHeaders  << "Emails";
-        *emailList << list;
-
+         // assign qlist from thread to emailList pointer
+         *emailList << list;
         // convert qlis to qset to remove dups
          QSet<QString> set = emailList->toSet();
-
         // convert qset back to list
          setEmailList = set.toList();
-
-
-         ui->tableWidget_Emails->setRowCount(20);
-         ui->tableWidget_Emails->setColumnCount(1);
          for(int i = 0; i < setEmailList.size(); i++)
          {
+
+             ui->tableWidget_Emails->setItem(i, 0, new QTableWidgetItem(setEmailList.at(i)));
+             ui->tableWidget_Emails->showRow(i);
 
              // only show up to 20 at any given time
 //             if(i <=  *nextEmailPaginationPtr || i >= *previousEmailPaginationPtr){
@@ -2128,21 +2140,34 @@ void MainWindow::receiverEmailList(QString list)
 
              if(i <=  *nextEmailPaginationPtr || i >= *previousEmailPaginationPtr )
              {
-                 qDebug() <<"emails -->" << setEmailList.at(i) ;
+                // qDebug() <<"emails -->" << setEmailList.at(i) ;
                  //ui->tableWidget_Emails->setRowCount(*nextEmailPaginationPtr);
-                 ui->tableWidget_Emails->setItem(i, 0, new QTableWidgetItem(setEmailList.at(i)));
+                // ui->tableWidget_Emails->setItem(i, 0, new QTableWidgetItem(setEmailList.at(i)));
 
 
              }
 
-         }
+         }// end of outer for loop
 
-         ui->tableWidget_Emails->setHorizontalHeaderLabels(emailTableHeaders);
-         ui->tableWidget_Emails->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        for(int j =0;  j < ui->tableWidget_Emails->rowCount();  j ++)
+        {
+              //qDebug() << j;
+//            if(ui->tableWidget_Emails->item(j,0)->text().isEmpty())
+//            {
+//                ui->tableWidget_Emails->hideRow(j);
+//            }else{
+
+//                ui->tableWidget_Emails->showRow(j);
+//            }
+
+        }
+
+
+
+
 
          // items found on bottom status bar
          ui->label_Items_Found->setText("Items Found: " +QString::number(setEmailList.size()));
-         ui->tableWidget_Emails->resizeRowsToContents();
 
          ui->pushButton_Next_Email_Pagination->show();
          ui->pushButton_Previous_Email_Pagination->show();
@@ -2303,6 +2328,7 @@ void MainWindow::deleteEmailsListTable(){
     ui->tableWidget_Emails->setColumnCount(0);
 
 }
+
 
 void MainWindow::recieverCurlResponseInfo(QString info)
 {

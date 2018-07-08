@@ -148,8 +148,9 @@ void Worker::doWork()
 
                 QString plainText = QTextDocumentFragment::fromHtml( responseString).toPlainText();
                 QString filteredNewLine = plainText.replace("\n"," ");
-                QRegularExpression re("[a-z0-9]+[_a-z0-9.-]*[a-z0-9]+@[a-z0-9-]+(.[a-z0-9-]+)");
+                QRegularExpression re("[0-9a-zA-Z]+([0-9a-zA-Z]*[-._+])*[0-9a-zA-Z]+@[0-9a-zA-Z]+([-.][0-9a-zA-Z]+)*([0-9a-zA-Z]*[.])[a-zA-Z]{2,6}");
                 QRegularExpressionMatchIterator i = re.globalMatch(filteredNewLine);
+                //qDebug() << filteredNewLine;
                 QStringList words;
                 QStringList test;
                 QString word;
@@ -159,8 +160,10 @@ void Worker::doWork()
                 int num = 0;
 
 
+
                 while (i.hasNext()) {
                     QRegularExpressionMatch match = i.next();
+
                       if(!match.captured(0).isEmpty())
                           word = match.captured(0);
                       //words << word;
