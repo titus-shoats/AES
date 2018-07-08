@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
      setSearchResults();
      setProxyTable();
      //setEmailTable();
-     setWindowTitle("Beat Crawler V0.1.8 (C) Beatcrawler.com");
+     setWindowTitle("Beat Crawler V0.1.9 (C) Beatcrawler.com");
      ui->lineEdit_keywords_search_box->setPlaceholderText("my mixtape");
      fetchWriteCallBackCurlDataString = "";
      MainWindow::fetchWriteCallBackCurlData = &fetchWriteCallBackCurlDataString;
@@ -84,7 +84,6 @@ MainWindow::MainWindow(QWidget *parent) :
     // ui->lineEdit_keywords_search_box->installEventFilter(this);
 
      ui->tableWidget_Proxy->setSelectionBehavior(QAbstractItemView::SelectRows);
-     ui->pushButton_Load_Proxies->hide();
 
      ui->pushButton_Start->setCheckable(true);
      ui->checkBox_Bing->setChecked(true);
@@ -99,6 +98,10 @@ MainWindow::MainWindow(QWidget *parent) :
      ui->checkBox_Social_Soundcloud->setChecked(true);
      ui->checkBox_Yahoo->setChecked(true);
      ui->radioButton_Android_Webkit->setChecked(true);
+
+     ui->pushButton_Next_Email_Pagination->hide();
+     ui->pushButton_Previous_Email_Pagination->hide();
+     ui->lineEdit_Keyword_List_File_Location->setEnabled(false);
 
 
     emailOptionsNum = 0 ;
@@ -142,11 +145,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     addProxyCounterNum = 0;
     addProxyCounterPtr = &addProxyCounterNum;
-
-
-
-
-
 
 
 
@@ -536,6 +534,7 @@ void MainWindow::on_pushButton_Load_Keyword_List_clicked()
      QString fileExt = fi.completeSuffix();
 
      if(fileExt == "txt"){
+         ui->lineEdit_Keyword_List_File_Location->setText(file.fileName());
          while(!file.atEnd())
          {
              filteredString1.append(file.readLine());
@@ -2112,13 +2111,29 @@ void MainWindow::receiverEmailList(QString list)
          setEmailList = set.toList();
 
 
-         ui->tableWidget_Emails->setRowCount(setEmailList.size());
+         ui->tableWidget_Emails->setRowCount(20);
          ui->tableWidget_Emails->setColumnCount(1);
-         for(int i =0; i < setEmailList.size(); i++)
+         for(int i = 0; i < setEmailList.size(); i++)
          {
 
+             // only show up to 20 at any given time
+//             if(i <=  *nextEmailPaginationPtr || i >= *previousEmailPaginationPtr){
+//                 qDebug() <<"increment -->" << i ;
+//                 qDebug() <<"next--> "<<  *nextEmailPaginationPtr;
+//                 qDebug() <<"previous-->" <<*previousEmailPaginationPtr;
+//                ui->tableWidget_Emails->setItem(i, 0, new QTableWidgetItem(setEmailList.at(i)));
 
-              ui->tableWidget_Emails->setItem(i, 0, new QTableWidgetItem(setEmailList.at(i)));
+//             }
+
+
+             if(i <=  *nextEmailPaginationPtr || i >= *previousEmailPaginationPtr )
+             {
+                 qDebug() <<"emails -->" << setEmailList.at(i) ;
+                 //ui->tableWidget_Emails->setRowCount(*nextEmailPaginationPtr);
+                 ui->tableWidget_Emails->setItem(i, 0, new QTableWidgetItem(setEmailList.at(i)));
+
+
+             }
 
          }
 
@@ -2128,6 +2143,22 @@ void MainWindow::receiverEmailList(QString list)
          // items found on bottom status bar
          ui->label_Items_Found->setText("Items Found: " +QString::number(setEmailList.size()));
          ui->tableWidget_Emails->resizeRowsToContents();
+
+         ui->pushButton_Next_Email_Pagination->show();
+         ui->pushButton_Previous_Email_Pagination->show();
+
+
+
+//            for(int j  = *previousEmailPaginationPtr; j <= *nextEmailPaginationPtr; j++){
+//                //ui->tableWidget_Emails->setItem(i, 0, new QTableWidgetItem(QString("@gmail.com")));
+
+//                if(j <= setEmailList.size())
+//                {
+
+//                }
+//                //qDebug() << j;
+//            }
+
 
 }
 
@@ -2260,18 +2291,18 @@ void MainWindow::recieverKeywordsQueue(){
 
 void MainWindow::deleteKeyordsListTable(){
     // create empty table
-    QStringList keywordQueueTableHeaders;
-    keywordQueueTableHeaders  << "Keywords" << "Status";
     ui->tableWidget_Keywords_Queue->setRowCount(0);
     ui->tableWidget_Keywords_Queue->setColumnCount(0);
-    ui->tableWidget_Keywords_Queue->setHorizontalHeaderLabels(keywordQueueTableHeaders);
-    ui->tableWidget_Keywords_Queue->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->tableWidget_Keywords_Queue->resizeRowsToContents();
     *currentKeywordPtr = "";
 
 }
 
+void MainWindow::deleteEmailsListTable(){
+    // create empty table
+    ui->tableWidget_Emails->setRowCount(0);
+    ui->tableWidget_Emails->setColumnCount(0);
 
+}
 
 void MainWindow::recieverCurlResponseInfo(QString info)
 {
@@ -2406,10 +2437,7 @@ void MainWindow::on_pushButton_Add_Proxy_clicked()
 
 }
 
-void MainWindow::on_pushButton_Load_Proxies_clicked()
-{
 
-}
 
 void MainWindow::on_checkBox_Delete_Keywords_clicked()
 {
@@ -2418,7 +2446,44 @@ void MainWindow::on_checkBox_Delete_Keywords_clicked()
     {
         QTimer::singleShot(100,this,SLOT(deleteKeyordsListTable()));
         options[4]->keywordLoadListOptions.clear();
+        ui->lineEdit_Keyword_List_File_Location->setText("");
+
+    }
+}
+
+void MainWindow::on_pushButton_Next_Email_Pagination_clicked()
+{
+    (*nextEmailPaginationPtr)+=20;
+
+    if(*nextEmailPaginationPtr >=40){
+
+        (*previousEmailPaginationPtr)+=20;
+
+    }
+
+
+}
+
+void MainWindow::on_pushButton_Previous_Email_Pagination_clicked()
+{
+    if(*previousEmailPaginationPtr >= 20){
+         (*previousEmailPaginationPtr)-=20;
+         (*nextEmailPaginationPtr)-=20;
+    }
+
+
+
+}
+
+void MainWindow::on_checkBox_Delete_Emails_clicked()
+{
+    if(ui->checkBox_Delete_Emails->isChecked())
+    {
+        QTimer::singleShot(100,this,SLOT(deleteEmailsListTable()));
+        emailList->clear();
+        ui->label_Items_Found->setText("Items Found: ");
 
 
     }
+
 }

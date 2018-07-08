@@ -50,8 +50,13 @@ private slots:
     bool eventFilter(QObject *watched,QEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void on_pushButton_Add_Proxy_clicked();
-    void on_pushButton_Load_Proxies_clicked();
     void on_checkBox_Delete_Keywords_clicked();
+
+    void on_pushButton_Next_Email_Pagination_clicked();
+
+    void on_pushButton_Previous_Email_Pagination_clicked();
+
+    void on_checkBox_Delete_Emails_clicked();
 
 public slots:
 
@@ -61,6 +66,7 @@ public slots:
       void recieverKeywordsQueue();
       void recieverCurlResponseInfo(QString info);
       void deleteKeyordsListTable();
+      void deleteEmailsListTable();
 
 signals:
     void postParam(QString,QString,QList <QString> *);

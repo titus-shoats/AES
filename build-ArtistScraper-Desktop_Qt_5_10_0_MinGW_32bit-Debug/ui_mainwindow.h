@@ -48,6 +48,9 @@ public:
     QWidget *tab_3;
     QTableWidget *tableWidget_Emails;
     QPushButton *pushButton_Save;
+    QPushButton *pushButton_Next_Email_Pagination;
+    QPushButton *pushButton_Previous_Email_Pagination;
+    QCheckBox *checkBox_Delete_Emails;
     QWidget *tab;
     QCheckBox *checkBox_Delete_Keywords;
     QTableWidget *tableWidget_Keywords_Queue;
@@ -87,12 +90,12 @@ public:
     QLineEdit *lineEdit_Proxy_Port;
     QPushButton *pushButton_Add_Proxy;
     QCheckBox *checkBox_Delete_Proxy;
-    QPushButton *pushButton_Load_Proxies;
     QFrame *line_2;
     QPushButton *pushButton_Load_Keyword_List;
     QLabel *label_Current_Keyword;
     QLabel *label_Curl_Status;
     QLabel *label_Items_Found;
+    QLineEdit *lineEdit_Keyword_List_File_Location;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -137,7 +140,16 @@ public:
         tableWidget_Emails->setGeometry(QRect(10, 10, 591, 201));
         pushButton_Save = new QPushButton(tab_3);
         pushButton_Save->setObjectName(QStringLiteral("pushButton_Save"));
-        pushButton_Save->setGeometry(QRect(450, 220, 61, 21));
+        pushButton_Save->setGeometry(QRect(10, 220, 61, 21));
+        pushButton_Next_Email_Pagination = new QPushButton(tab_3);
+        pushButton_Next_Email_Pagination->setObjectName(QStringLiteral("pushButton_Next_Email_Pagination"));
+        pushButton_Next_Email_Pagination->setGeometry(QRect(539, 220, 61, 21));
+        pushButton_Previous_Email_Pagination = new QPushButton(tab_3);
+        pushButton_Previous_Email_Pagination->setObjectName(QStringLiteral("pushButton_Previous_Email_Pagination"));
+        pushButton_Previous_Email_Pagination->setGeometry(QRect(470, 220, 61, 21));
+        checkBox_Delete_Emails = new QCheckBox(tab_3);
+        checkBox_Delete_Emails->setObjectName(QStringLiteral("checkBox_Delete_Emails"));
+        checkBox_Delete_Emails->setGeometry(QRect(370, 220, 91, 20));
         tabWidget_Queue_Keywords->addTab(tab_3, QString());
         tab = new QWidget();
         tab->setObjectName(QStringLiteral("tab"));
@@ -255,9 +267,6 @@ public:
         checkBox_Delete_Proxy = new QCheckBox(tab_5);
         checkBox_Delete_Proxy->setObjectName(QStringLiteral("checkBox_Delete_Proxy"));
         checkBox_Delete_Proxy->setGeometry(QRect(160, 210, 91, 19));
-        pushButton_Load_Proxies = new QPushButton(tab_5);
-        pushButton_Load_Proxies->setObjectName(QStringLiteral("pushButton_Load_Proxies"));
-        pushButton_Load_Proxies->setGeometry(QRect(270, 180, 80, 21));
         tabWidget_Queue_Keywords->addTab(tab_5, QString());
         line_2 = new QFrame(centralWidget);
         line_2->setObjectName(QStringLiteral("line_2"));
@@ -276,6 +285,9 @@ public:
         label_Items_Found = new QLabel(centralWidget);
         label_Items_Found->setObjectName(QStringLiteral("label_Items_Found"));
         label_Items_Found->setGeometry(QRect(440, 390, 131, 20));
+        lineEdit_Keyword_List_File_Location = new QLineEdit(centralWidget);
+        lineEdit_Keyword_List_File_Location->setObjectName(QStringLiteral("lineEdit_Keyword_List_File_Location"));
+        lineEdit_Keyword_List_File_Location->setGeometry(QRect(452, 40, 151, 21));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -290,7 +302,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget_Queue_Keywords->setCurrentIndex(1);
+        tabWidget_Queue_Keywords->setCurrentIndex(0);
         tabWidget_Options->setCurrentIndex(2);
 
 
@@ -305,8 +317,11 @@ public:
         label_search_engine_keywords->setText(QApplication::translate("MainWindow", "Keyword", nullptr));
         pushButton_Start->setText(QApplication::translate("MainWindow", "Start", nullptr));
         pushButton_Save->setText(QApplication::translate("MainWindow", "Save", nullptr));
+        pushButton_Next_Email_Pagination->setText(QApplication::translate("MainWindow", "Next", nullptr));
+        pushButton_Previous_Email_Pagination->setText(QApplication::translate("MainWindow", "Previous", nullptr));
+        checkBox_Delete_Emails->setText(QApplication::translate("MainWindow", "Remove Emails", nullptr));
         tabWidget_Queue_Keywords->setTabText(tabWidget_Queue_Keywords->indexOf(tab_3), QApplication::translate("MainWindow", "Harvested Emails", nullptr));
-        checkBox_Delete_Keywords->setText(QApplication::translate("MainWindow", "Delete Keywords", nullptr));
+        checkBox_Delete_Keywords->setText(QApplication::translate("MainWindow", "Remove Keywords", nullptr));
         tabWidget_Queue_Keywords->setTabText(tabWidget_Queue_Keywords->indexOf(tab), QApplication::translate("MainWindow", "Queue Keywords", nullptr));
         label_Search_Engine_Label_Option->setText(QApplication::translate("MainWindow", "Parse selected Search Engines Only", nullptr));
         checkBox_Google->setText(QApplication::translate("MainWindow", "google", nullptr));
@@ -334,12 +349,12 @@ public:
         label_2->setText(QApplication::translate("MainWindow", "Proxy Port", nullptr));
         pushButton_Add_Proxy->setText(QApplication::translate("MainWindow", "Add Proxy", nullptr));
         checkBox_Delete_Proxy->setText(QApplication::translate("MainWindow", "Delete Proxy", nullptr));
-        pushButton_Load_Proxies->setText(QApplication::translate("MainWindow", "PushButton", nullptr));
         tabWidget_Queue_Keywords->setTabText(tabWidget_Queue_Keywords->indexOf(tab_5), QApplication::translate("MainWindow", "Proxies", nullptr));
         pushButton_Load_Keyword_List->setText(QApplication::translate("MainWindow", "Load List", nullptr));
         label_Current_Keyword->setText(QApplication::translate("MainWindow", "Current Keyword:", nullptr));
         label_Curl_Status->setText(QApplication::translate("MainWindow", "Status", nullptr));
         label_Items_Found->setText(QApplication::translate("MainWindow", "Items Found", nullptr));
+        lineEdit_Keyword_List_File_Location->setText(QString());
     } // retranslateUi
 
 };
