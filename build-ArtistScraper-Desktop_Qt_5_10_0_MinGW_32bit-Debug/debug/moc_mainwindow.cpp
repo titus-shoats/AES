@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[24];
-    char stringdata0[447];
+    QByteArrayData data[26];
+    char stringdata0[477];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -55,7 +55,9 @@ QT_MOC_LITERAL(19, 345, 17), // "receiverEmailList"
 QT_MOC_LITERAL(20, 363, 18), // "receiverParameters"
 QT_MOC_LITERAL(21, 382, 27), // "recieverProxyTableSelection"
 QT_MOC_LITERAL(22, 410, 14), // "QItemSelection"
-QT_MOC_LITERAL(23, 425, 21) // "recieverKeywordsQueue"
+QT_MOC_LITERAL(23, 425, 21), // "recieverKeywordsQueue"
+QT_MOC_LITERAL(24, 447, 24), // "recieverCurlResponseInfo"
+QT_MOC_LITERAL(25, 472, 4) // "info"
 
     },
     "MainWindow\0postParam\0\0QList<QString>*\0"
@@ -70,7 +72,8 @@ QT_MOC_LITERAL(23, 425, 21) // "recieverKeywordsQueue"
     "on_pushButton_Load_Proxies_clicked\0"
     "receiverEmailList\0receiverParameters\0"
     "recieverProxyTableSelection\0QItemSelection\0"
-    "recieverKeywordsQueue"
+    "recieverKeywordsQueue\0recieverCurlResponseInfo\0"
+    "info"
 };
 #undef QT_MOC_LITERAL
 
@@ -80,7 +83,7 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      15,   14, // methods
+      16,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -88,23 +91,24 @@ static const uint qt_meta_data_MainWindow[] = {
        5,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    3,   89,    2, 0x06 /* Public */,
-       4,    0,   96,    2, 0x06 /* Public */,
-       5,    1,   97,    2, 0x06 /* Public */,
-       6,    1,  100,    2, 0x06 /* Public */,
-       7,    1,  103,    2, 0x06 /* Public */,
+       1,    3,   94,    2, 0x06 /* Public */,
+       4,    0,  101,    2, 0x06 /* Public */,
+       5,    1,  102,    2, 0x06 /* Public */,
+       6,    1,  105,    2, 0x06 /* Public */,
+       7,    1,  108,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       8,    1,  106,    2, 0x08 /* Private */,
-      10,    0,  109,    2, 0x08 /* Private */,
-      11,    2,  110,    2, 0x08 /* Private */,
-      15,    1,  115,    2, 0x08 /* Private */,
-      17,    0,  118,    2, 0x08 /* Private */,
-      18,    0,  119,    2, 0x08 /* Private */,
-      19,    1,  120,    2, 0x0a /* Public */,
-      20,    0,  123,    2, 0x0a /* Public */,
-      21,    2,  124,    2, 0x0a /* Public */,
-      23,    0,  129,    2, 0x0a /* Public */,
+       8,    1,  111,    2, 0x08 /* Private */,
+      10,    0,  114,    2, 0x08 /* Private */,
+      11,    2,  115,    2, 0x08 /* Private */,
+      15,    1,  120,    2, 0x08 /* Private */,
+      17,    0,  123,    2, 0x08 /* Private */,
+      18,    0,  124,    2, 0x08 /* Private */,
+      19,    1,  125,    2, 0x0a /* Public */,
+      20,    0,  128,    2, 0x0a /* Public */,
+      21,    2,  129,    2, 0x0a /* Public */,
+      23,    0,  134,    2, 0x0a /* Public */,
+      24,    1,  135,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::QString, QMetaType::QString, 0x80000000 | 3,    2,    2,    2,
@@ -124,6 +128,7 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void,
     QMetaType::Void, 0x80000000 | 22, 0x80000000 | 22,    2,    2,
     QMetaType::Void,
+    QMetaType::Void, QMetaType::QString,   25,
 
        0        // eod
 };
@@ -150,6 +155,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 12: _t->receiverParameters(); break;
         case 13: _t->recieverProxyTableSelection((*reinterpret_cast< const QItemSelection(*)>(_a[1])),(*reinterpret_cast< const QItemSelection(*)>(_a[2]))); break;
         case 14: _t->recieverKeywordsQueue(); break;
+        case 15: _t->recieverCurlResponseInfo((*reinterpret_cast< QString(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
@@ -229,13 +235,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 15)
+        if (_id < 16)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 15;
+        _id -= 16;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 15)
+        if (_id < 16)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 15;
+        _id -= 16;
     }
     return _id;
 }

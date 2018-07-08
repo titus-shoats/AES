@@ -182,7 +182,7 @@ void Worker::doWork()
                 return size;
             });// end setWriteFunction
 
-            connect(curl, &CurlEasy::done, [curl](CURLcode result) {
+            connect(curl, &CurlEasy::done, [curl,this](CURLcode result) {
                 long httpResponseCode = curl->get<long>(CURLINFO_RESPONSE_CODE);
 
                 QString effectiveUrl = curl->get<const char*>(CURLINFO_EFFECTIVE_URL);
@@ -192,11 +192,15 @@ void Worker::doWork()
                 if(httpResponseCode == 200 && result ==CURLE_OK){
 
                    //qDebug() << "GOOD TO SCRAPE";
+                    emit senderCurlResponseInfo("Request Succeded");
+
                 }
 
                 if(httpResponseCode == 503){
 
-                   qDebug() << "503 ERROR CODE ";
+                  // qDebug() << "503 ERROR CODE ";
+                  // emit senderCurlResponseInfo("503 ERROR CODE");
+
 
                 }
 
@@ -209,17 +213,11 @@ void Worker::doWork()
 
 
                 if(result != CURLE_OK) {
-//                  size_t len = strlen(errbuf);
-//                  fprintf(stderr, "\nlibcurl: (%d) ", res);
-//                  if(len)
-//                    fprintf(stderr, "%s%s", errbuf,
-//                            ((errbuf[len - 1] != '\n') ? "\n" : ""));
-//                  else
-//                    fprintf(stderr, "%s\n", curl_easy_strerror(res));
-                   // qDebug() << "BUFFER ERROR---->"<< curl->errbuf;
 
-
-                    switch(result){
+                    switch(result)
+                    {
+                        case 5: qDebug()  << "Curl code-> "<< result << " Message->" << curl->errbuf;
+                         break;
                         case 7: qDebug()  << "Curl code-> "<< result << " Message->" << curl->errbuf;
                            break;
                        case 35: qDebug() <<  "Curl code-> " <<result << " Message->" << curl->errbuf;
@@ -227,11 +225,23 @@ void Worker::doWork()
                        case 56: qDebug()  << "Curl code-> "<< result << " Message->" << curl->errbuf;
                             break;
 
-                       case 5: qDebug()  << "Curl code-> "<< result << " Message->" << curl->errbuf;
-                            break;
+
                        default: qDebug() << "Default Switch Statement Curl Code--> " << result;
 
                     }
+                    /**************
+                     *checks curl erros codes
+                     *
+                     * 5 -- Couldn't resolve proxy. The given proxy host could not be resolved.
+                     * 7 -- Failed to connect() to host or proxy.
+                     *
+                     *********/
+                    if(result == 5 || result == 7  || result == 35)
+                    {
+                      emit senderCurlResponseInfo("Proxy Error");
+                    }
+
+
 
                 }
 

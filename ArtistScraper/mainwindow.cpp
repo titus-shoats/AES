@@ -61,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent) :
      connect(this,SIGNAL(emitsenderEmptyProxyServer(QString)),worker,SLOT(receiverEmptyProxyServer(QString)));
      connect(this,SIGNAL(emitsenderStopThreadCounters(QString)),worker,SLOT(receiverStopThreadCounters(QString)));
      connect(this,SIGNAL(emitsenderStartThreadCounters(QString)),worker,SLOT(receiverStartThreadCounters(QString)));
+     connect(worker,SIGNAL(senderCurlResponseInfo(QString)),this,SLOT(recieverCurlResponseInfo(QString)));
 
      //connect(this,SIGNAL(senderOpenProxyFlile(QString)),worker,SLOT(getProxyFile(QString)));
      // delete selected proxy row
@@ -429,13 +430,9 @@ void MainWindow::on_pushButton_Start_clicked(bool checked)
 
 
         worker->abort();
-
         thread->quit();
-
         emit emitsenderStopThreadCounters("Stop");
-
-
-
+        ui->label_Curl_Status->setText("Status: ");
 
         ui->pushButton_Start->setText("Start");
 
@@ -2217,6 +2214,23 @@ void MainWindow::recieverKeywordsQueue(){
     ui->tableWidget_Keywords_Queue->setHorizontalHeaderLabels(keywordQueueTableHeaders);
     ui->tableWidget_Keywords_Queue->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
+}
+
+void MainWindow::recieverCurlResponseInfo(QString info)
+{
+    //qDebug() << info;
+
+    if(info == "Proxy Error")
+    {
+
+        ui->label_Curl_Status->setText("Status: Proxy failed, could not start harvest");
+
+    }
+    else if(info == "Request Succeded")
+    {
+        ui->label_Curl_Status->setText("Status: Successfully Crawling");
+
+    }
 }
 
 

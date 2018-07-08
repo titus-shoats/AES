@@ -62,6 +62,7 @@ public slots:
       void receiverParameters();
       void recieverProxyTableSelection(const QItemSelection &,const QItemSelection &);
       void recieverKeywordsQueue();
+      void recieverCurlResponseInfo(QString info);
 
 
 

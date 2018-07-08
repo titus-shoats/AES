@@ -98,6 +98,7 @@ signals:
     void emitParameters();
     void emitEmailList( QString);
     void emitKeywordQueue();
+    void senderCurlResponseInfo(QString);
 
 
 

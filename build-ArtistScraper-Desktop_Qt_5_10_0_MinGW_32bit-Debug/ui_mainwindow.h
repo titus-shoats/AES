@@ -16,6 +16,7 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFrame>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
@@ -90,6 +91,10 @@ public:
     QFrame *line_2;
     QPushButton *pushButton_Load_Keyword_List;
     QLabel *label_Current_Keyword;
+    QWidget *widget;
+    QHBoxLayout *horizontalLayout;
+    QLabel *label_Curl_Status;
+    QLabel *label_App_Status_2;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -98,7 +103,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(638, 448);
+        MainWindow->resize(638, 477);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         lineEdit_keywords_search_box = new QLineEdit(centralWidget);
@@ -126,7 +131,7 @@ public:
         pushButton_Start->setGeometry(QRect(10, 80, 80, 21));
         tabWidget_Queue_Keywords = new QTabWidget(centralWidget);
         tabWidget_Queue_Keywords->setObjectName(QStringLiteral("tabWidget_Queue_Keywords"));
-        tabWidget_Queue_Keywords->setGeometry(QRect(10, 120, 621, 281));
+        tabWidget_Queue_Keywords->setGeometry(QRect(10, 120, 621, 271));
         tab_3 = new QWidget();
         tab_3->setObjectName(QStringLiteral("tab_3"));
         tableWidget_Emails = new QTableWidget(tab_3);
@@ -264,6 +269,24 @@ public:
         label_Current_Keyword = new QLabel(centralWidget);
         label_Current_Keyword->setObjectName(QStringLiteral("label_Current_Keyword"));
         label_Current_Keyword->setGeometry(QRect(416, 80, 201, 20));
+        widget = new QWidget(centralWidget);
+        widget->setObjectName(QStringLiteral("widget"));
+        widget->setGeometry(QRect(30, 400, 611, 16));
+        horizontalLayout = new QHBoxLayout(widget);
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        label_Curl_Status = new QLabel(widget);
+        label_Curl_Status->setObjectName(QStringLiteral("label_Curl_Status"));
+
+        horizontalLayout->addWidget(label_Curl_Status);
+
+        label_App_Status_2 = new QLabel(widget);
+        label_App_Status_2->setObjectName(QStringLiteral("label_App_Status_2"));
+
+        horizontalLayout->addWidget(label_App_Status_2);
+
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -278,7 +301,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget_Queue_Keywords->setCurrentIndex(3);
+        tabWidget_Queue_Keywords->setCurrentIndex(0);
         tabWidget_Options->setCurrentIndex(2);
 
 
@@ -325,6 +348,8 @@ public:
         tabWidget_Queue_Keywords->setTabText(tabWidget_Queue_Keywords->indexOf(tab_5), QApplication::translate("MainWindow", "Proxies", nullptr));
         pushButton_Load_Keyword_List->setText(QApplication::translate("MainWindow", "Load List", nullptr));
         label_Current_Keyword->setText(QApplication::translate("MainWindow", "Current Keyword:", nullptr));
+        label_Curl_Status->setText(QApplication::translate("MainWindow", "Status:", nullptr));
+        label_App_Status_2->setText(QApplication::translate("MainWindow", "Items Found:", nullptr));
     } // retranslateUi
 
 };
