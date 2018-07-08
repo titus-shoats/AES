@@ -204,14 +204,6 @@ void Worker::doWork()
 
                 }
 
-
-                // BELOW IF CONDITION DOESNT MAKE SENSE -- REDO IT
-                if(result != result){
-                    qDebug() << "CURLcode is NOT OK :: result is--->" << result;
-                    qDebug() << "CURLcode is NOT OK :: HTTP CODE--->" << httpResponseCode;
-                }
-
-
                 if(result != CURLE_OK) {
 
                     switch(result)

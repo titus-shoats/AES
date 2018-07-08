@@ -418,6 +418,8 @@ void MainWindow::on_pushButton_Start_clicked(bool checked)
 
             worker->requestWork();
             emit emitsenderStartThreadCounters("Start");
+            ui->label_Curl_Status->setText("Status: Starting...");
+
 
 
         }
@@ -2103,6 +2105,8 @@ void MainWindow::receiverEmailList(QString list)
          ui->tableWidget_Emails->setHorizontalHeaderLabels(emailTableHeaders);
          ui->tableWidget_Emails->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
+         ui->label_Items_Found->setText("Items Found: " +QString::number(emailList->size()));
+
 }
 
 
@@ -2220,10 +2224,10 @@ void MainWindow::recieverCurlResponseInfo(QString info)
 {
     //qDebug() << info;
 
-    if(info == "Proxy Error")
+    if(info == "Proxy Error" || info ==  "503")
     {
 
-        ui->label_Curl_Status->setText("Status: Proxy failed, could not start harvest");
+        ui->label_Curl_Status->setText("Status: Proxy failed, or Server is Temporarily Unavailable");
 
     }
     else if(info == "Request Succeded")

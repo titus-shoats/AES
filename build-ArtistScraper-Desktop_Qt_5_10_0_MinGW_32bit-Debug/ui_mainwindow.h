@@ -16,7 +16,6 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFrame>
-#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
@@ -91,10 +90,8 @@ public:
     QFrame *line_2;
     QPushButton *pushButton_Load_Keyword_List;
     QLabel *label_Current_Keyword;
-    QWidget *widget;
-    QHBoxLayout *horizontalLayout;
     QLabel *label_Curl_Status;
-    QLabel *label_App_Status_2;
+    QLabel *label_Items_Found;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -238,10 +235,10 @@ public:
         tableWidget_Proxy->setGeometry(QRect(20, 20, 231, 181));
         label = new QLabel(tab_5);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(350, 20, 81, 16));
+        label->setGeometry(QRect(360, 20, 71, 20));
         label_2 = new QLabel(tab_5);
         label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(350, 50, 61, 16));
+        label_2->setGeometry(QRect(360, 50, 51, 20));
         lineEdit_Proxy_Host = new QLineEdit(tab_5);
         lineEdit_Proxy_Host->setObjectName(QStringLiteral("lineEdit_Proxy_Host"));
         lineEdit_Proxy_Host->setGeometry(QRect(430, 20, 113, 21));
@@ -269,24 +266,12 @@ public:
         label_Current_Keyword = new QLabel(centralWidget);
         label_Current_Keyword->setObjectName(QStringLiteral("label_Current_Keyword"));
         label_Current_Keyword->setGeometry(QRect(416, 80, 201, 20));
-        widget = new QWidget(centralWidget);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(30, 400, 611, 16));
-        horizontalLayout = new QHBoxLayout(widget);
-        horizontalLayout->setSpacing(6);
-        horizontalLayout->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        horizontalLayout->setContentsMargins(0, 0, 0, 0);
-        label_Curl_Status = new QLabel(widget);
+        label_Curl_Status = new QLabel(centralWidget);
         label_Curl_Status->setObjectName(QStringLiteral("label_Curl_Status"));
-
-        horizontalLayout->addWidget(label_Curl_Status);
-
-        label_App_Status_2 = new QLabel(widget);
-        label_App_Status_2->setObjectName(QStringLiteral("label_App_Status_2"));
-
-        horizontalLayout->addWidget(label_App_Status_2);
-
+        label_Curl_Status->setGeometry(QRect(11, 391, 291, 21));
+        label_Items_Found = new QLabel(centralWidget);
+        label_Items_Found->setObjectName(QStringLiteral("label_Items_Found"));
+        label_Items_Found->setGeometry(QRect(440, 390, 131, 20));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -340,7 +325,7 @@ public:
         checkBox_Social_Myspace->setText(QApplication::translate("MainWindow", "myspace", nullptr));
         tabWidget_Options->setTabText(tabWidget_Options->indexOf(tab_8), QApplication::translate("MainWindow", "Social Networks", nullptr));
         tabWidget_Queue_Keywords->setTabText(tabWidget_Queue_Keywords->indexOf(tab_4), QApplication::translate("MainWindow", "Options", nullptr));
-        label->setText(QApplication::translate("MainWindow", "Proxy Server", nullptr));
+        label->setText(QApplication::translate("MainWindow", "HTTP Proxy", nullptr));
         label_2->setText(QApplication::translate("MainWindow", "Proxy Port", nullptr));
         pushButton_Add_Proxy->setText(QApplication::translate("MainWindow", "Add Proxy", nullptr));
         checkBox_Delete_Proxy->setText(QApplication::translate("MainWindow", "Delete Proxy", nullptr));
@@ -348,8 +333,8 @@ public:
         tabWidget_Queue_Keywords->setTabText(tabWidget_Queue_Keywords->indexOf(tab_5), QApplication::translate("MainWindow", "Proxies", nullptr));
         pushButton_Load_Keyword_List->setText(QApplication::translate("MainWindow", "Load List", nullptr));
         label_Current_Keyword->setText(QApplication::translate("MainWindow", "Current Keyword:", nullptr));
-        label_Curl_Status->setText(QApplication::translate("MainWindow", "Status:", nullptr));
-        label_App_Status_2->setText(QApplication::translate("MainWindow", "Items Found:", nullptr));
+        label_Curl_Status->setText(QApplication::translate("MainWindow", "Status", nullptr));
+        label_Items_Found->setText(QApplication::translate("MainWindow", "Items Found", nullptr));
     } // retranslateUi
 
 };
