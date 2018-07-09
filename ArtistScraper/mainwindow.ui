@@ -99,7 +99,7 @@
      <string>Start</string>
     </property>
    </widget>
-   <widget class="QTabWidget" name="tabWidget_Queue_Keywords">
+   <widget class="QTabWidget" name="tabWidget_Global">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -109,7 +109,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
@@ -210,7 +210,7 @@
      <attribute name="title">
       <string>Options</string>
      </attribute>
-     <widget class="QTabWidget" name="tabWidget_Options">
+     <widget class="QTabWidget" name="tabWidget_Harvester_Options">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -517,16 +517,6 @@
      <attribute name="title">
       <string>Proxies</string>
      </attribute>
-     <widget class="QTableView" name="tableView_Proxy">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>601</width>
-        <height>231</height>
-       </rect>
-      </property>
-     </widget>
      <widget class="QTableWidget" name="tableWidget_Proxy">
       <property name="geometry">
        <rect>

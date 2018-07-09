@@ -103,7 +103,7 @@ void Worker::doWork()
 
         // This will stupidly wait 1 sec doing nothing...
         QEventLoop loop;
-        QTimer::singleShot(6000, &loop, SLOT(quit()));
+        QTimer::singleShot(5000, &loop, SLOT(quit()));
         loop.exec();
 
         // send signal to grab parameter options
@@ -201,8 +201,8 @@ void Worker::doWork()
 
                 if(httpResponseCode == 503){
 
-                  // qDebug() << "503 ERROR CODE ";
-                  // emit senderCurlResponseInfo("503 ERROR CODE");
+                 // qDebug() << "503 ERROR CODE ";
+                  emit senderCurlResponseInfo("503");
 
 
                 }

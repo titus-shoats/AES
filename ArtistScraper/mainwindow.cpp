@@ -302,6 +302,7 @@ void MainWindow::on_pushButton_Start_clicked(bool checked)
             keywordQueueTableHeaders  << "Keywords" << "Status";
             ui->tableWidget_Keywords_Queue->setHorizontalHeaderLabels(keywordQueueTableHeaders);
 
+
             // KEYWORD BOX INPUT
             if(!ui->lineEdit_keywords_search_box->text().isEmpty())
             {
@@ -432,18 +433,20 @@ void MainWindow::on_pushButton_Start_clicked(bool checked)
 
 
             // To avoid having two threads running simultaneously, the previous thread is aborted.
-
-
-
             worker->abort();
-
-            thread->wait(); // If the thread is not running, this will immediately return.
-
+            // If the thread is not running, this will immediately return.
+            thread->wait();
             worker->requestWork();
             emit emitsenderStartThreadCounters("Start");
             ui->label_Curl_Status->setText("Status: Starting...");
             clickedStartStopButton = true;
-
+            //disables options, stops user from altering options while harvesting
+            ui->tabWidget_Harvester_Options->setEnabled(false);
+           // ui->tabWidget_Global->setTabEnabled(3,false);
+            ui->tableWidget_Proxy->setEnabled(false);
+            ui->lineEdit_Proxy_Host->setEnabled(false);
+            ui->lineEdit_Proxy_Port->setEnabled(false);
+            ui->pushButton_Add_Proxy->setEnabled(false);
 
 
         }
@@ -460,19 +463,21 @@ void MainWindow::on_pushButton_Start_clicked(bool checked)
         emit emitsenderStopThreadCounters("Stop");
         ui->label_Curl_Status->setText("Status: ");
         clickedStartStopButton = false;
-
         ui->pushButton_Start->setText("Start");
-
         *searchEngineNumPtr=0;
-
         *searchEngineNumPtrCounter=0;
-
         *keywordSearchBoxSearchEngineCounterPtr =0;
-
         *keywordListSearchEngineCounterPtr = 0;
-
         *keywordListNumPtrCounter = 0;
         *keywordBoxNumPtrCounter =0;
+        ui->tabWidget_Harvester_Options->setEnabled(true);
+       // ui->tabWidget_Global->setTabEnabled(3,true);
+        ui->tableWidget_Proxy->setEnabled(true);
+        ui->lineEdit_Proxy_Host->setEnabled(true);
+        ui->lineEdit_Proxy_Port->setEnabled(true);
+        ui->pushButton_Add_Proxy->setEnabled(true);
+
+
 
 
 
@@ -2115,7 +2120,9 @@ void MainWindow::receiverParameters()
 
 void MainWindow::receiverEmailList(QString list)
 
+
 {
+         QString emailsToLowerCase;
          // assign qlist from thread to emailList pointer
          *emailList << list;
         // convert qlis to qset to remove dups
@@ -2125,7 +2132,10 @@ void MainWindow::receiverEmailList(QString list)
          for(int i = 0; i < setEmailList.size(); i++)
          {
 
-             ui->tableWidget_Emails->setItem(i, 0, new QTableWidgetItem(setEmailList.at(i)));
+
+            // qDebug() << setEmailList.at(i);
+             emailsToLowerCase = setEmailList.at(i);
+             ui->tableWidget_Emails->setItem(i, 0, new QTableWidgetItem(setEmailList.at(i).toLower()));
              ui->tableWidget_Emails->showRow(i);
 
              // only show up to 20 at any given time
@@ -2169,8 +2179,8 @@ void MainWindow::receiverEmailList(QString list)
          // items found on bottom status bar
          ui->label_Items_Found->setText("Items Found: " +QString::number(setEmailList.size()));
 
-         ui->pushButton_Next_Email_Pagination->show();
-         ui->pushButton_Previous_Email_Pagination->show();
+        // ui->pushButton_Next_Email_Pagination->show();
+         //ui->pushButton_Previous_Email_Pagination->show();
 
 
 
@@ -2324,8 +2334,19 @@ void MainWindow::deleteKeyordsListTable(){
 
 void MainWindow::deleteEmailsListTable(){
     // create empty table
-    ui->tableWidget_Emails->setRowCount(0);
-    ui->tableWidget_Emails->setColumnCount(0);
+    ui->tableWidget_Emails->resizeRowsToContents();
+
+    for(int i = 0; i < setEmailList.size(); i++)
+    {
+        ui->tableWidget_Emails->setItem(i, 0, new QTableWidgetItem(""));
+        ui->tableWidget_Emails->hideRow(i);
+
+    }
+    // clear email qtlist
+    emailList->clear();
+    // clear email qt set
+    setEmailList.clear();
+
 
 }
 
@@ -2338,6 +2359,10 @@ void MainWindow::recieverCurlResponseInfo(QString info)
     {
 
         ui->label_Curl_Status->setText("Status: Proxy failed, or Server is Temporarily Unavailable");
+        //QTimer::singleShot(10,this,SLOT(deleteEmailsListTable()));
+        //emailList->clear();
+        ui->label_Items_Found->setText("Items Found: ");
+        qDebug() << "Proxy or 503 Error";
 
     }
     else if(info == "Request Succeded")
@@ -2477,6 +2502,24 @@ void MainWindow::on_checkBox_Delete_Keywords_clicked()
     }
 }
 
+
+
+void MainWindow::on_checkBox_Delete_Emails_clicked()
+{
+    if(ui->checkBox_Delete_Emails->isChecked())
+    {
+        QTimer::singleShot(100,this,SLOT(deleteEmailsListTable()));
+       // emailList->clear();
+       // setEmailList.clear();
+        ui->label_Items_Found->setText("Items Found: ");
+
+
+    }
+
+}
+
+
+
 void MainWindow::on_pushButton_Next_Email_Pagination_clicked()
 {
     (*nextEmailPaginationPtr)+=20;
@@ -2501,15 +2544,4 @@ void MainWindow::on_pushButton_Previous_Email_Pagination_clicked()
 
 }
 
-void MainWindow::on_checkBox_Delete_Emails_clicked()
-{
-    if(ui->checkBox_Delete_Emails->isChecked())
-    {
-        QTimer::singleShot(100,this,SLOT(deleteEmailsListTable()));
-        emailList->clear();
-        ui->label_Items_Found->setText("Items Found: ");
 
-
-    }
-
-}
